@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "no-await-in-loop": "error",
+    "eqeqeq": "error",
+    "no-unused-vars": "error",
+    "no-console": "off"
+  }
+}
