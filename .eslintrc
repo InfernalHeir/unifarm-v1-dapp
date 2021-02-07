@@ -4,5 +4,6 @@
     "eqeqeq": "error",
     "no-unused-vars": "error",
     "no-console": "off"
-  }
+  },
+  "parser": "@typescript-eslint/parser"
 }
