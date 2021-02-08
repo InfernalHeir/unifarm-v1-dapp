@@ -2,6 +2,8 @@ import { injected } from "../connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import MetamaskLogo from "../assests/Images/metamask.png";
 
+export const ORO = "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46";
+
 interface IWallet {
   [connetorName: string]: {
     logoUri: string;
@@ -13,7 +15,7 @@ interface IWallet {
 }
 // you can add further diffrent providers.
 export const WALLETS: IWallet = {
-  metamask: {
+  METAMASK: {
     logoUri: MetamaskLogo,
     name: "Metamask",
     connector: injected,
