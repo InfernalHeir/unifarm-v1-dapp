@@ -30,7 +30,6 @@ const Web3Modal = ({ isOpen, close }: IWeb3Modal) => {
           console.log("metamask not available");
         }
       }
-      console.log(wallet);
       return (
         <>
           <p key={key}>{wallet.name}</p>
