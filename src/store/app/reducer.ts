@@ -1,17 +1,18 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { setApplicationError } from "./action";
-
-type AppStatus = boolean | null;
+import { setApplicationError, setOpenModal } from "./action";
 
 interface IAppState {
-  appStatus: AppStatus;
-  message?: string;
+  appStatus: boolean;
+  message: string | null;
+  openModal: boolean;
 }
 
 const initialAppState: IAppState = {
   appStatus: false,
-  message: "Hello",
+  message: null,
+  openModal: false,
 };
+
 export const appReducer = createReducer<IAppState>(
   initialAppState,
   (builder) => {
@@ -19,10 +20,17 @@ export const appReducer = createReducer<IAppState>(
       setApplicationError,
       (state, { payload: { appStatus, message } }) => {
         return {
+          ...state,
           appStatus,
           message,
         };
       }
-    );
+    ),
+      builder.addCase(setOpenModal, (state, { payload: { openModal } }) => {
+        return {
+          ...state,
+          openModal,
+        };
+      });
   }
 );

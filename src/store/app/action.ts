@@ -4,3 +4,7 @@ export const setApplicationError = createAction<{
   appStatus: boolean;
   message: string;
 }>("app/setApplicationError");
+
+export const setOpenModal = createAction<{ openModal: boolean }>(
+  "app/setOpenModal"
+);
