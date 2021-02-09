@@ -2,8 +2,9 @@
   "rules": {
     "no-await-in-loop": "error",
     "eqeqeq": "error",
-    "no-unused-vars": "error",
-    "no-console": "off"
+    "no-unused-vars": "off",
+    "no-console": "off",
+    "semi": "off"
   },
   "parser": "@typescript-eslint/parser"
 }

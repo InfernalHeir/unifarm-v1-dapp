@@ -21,9 +21,13 @@ const breakpoints: BreakPoints = {
   xs: 360,
 };
 
+const space = {
+  borderRadius: 12,
+};
 const theme: DefaultTheme = {
   colors: getApplicationTheme(),
   breakpoints,
+  space,
 };
 
 export default theme;

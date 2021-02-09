@@ -1,22 +1,29 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
-import styled from "styled-components";
-import Global from "./theme/Global";
 import { Provider } from "react-redux";
 import store from "./store";
+import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider } from "@web3-react/core";
+import Web3Modal from "./components/Web3Modal";
+import Stake from "./pages/stake";
+import "./index.css";
+import TokenSearchModal from "./components/TokenSearhModal";
 
-const Heading = styled.h2`
-  color: ${({ theme }) => theme.colors.unifarmPrimary};
-`;
 const App = () => {
+  const getLibrary = (provider) => {
+    return new Web3Provider(provider);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Global />
-        <Heading>Using Global Theming Style</Heading>
-      </Provider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Stake />
+          <Web3Modal />
+        </Web3ReactProvider>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

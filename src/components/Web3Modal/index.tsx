@@ -1,57 +1,89 @@
-import React, { Fragment } from "react";
-import Modal from "../Modal";
+import React from "react";
+import Dialog from "@material-ui/core/Dialog";
+import List from "@material-ui/core/List";
+//import DialogTitle from "@material-ui/core/DialogTitle";
+//import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import DialogActions from "@material-ui/core/DialogActions";
+import { useWeb3React } from "@web3-react/core";
+import styled from "styled-components";
+//import ListItemText from "@material-ui/core/ListItemText";
+import Button from "@material-ui/core/Button";
 import { WALLETS } from "../../constants";
-import { injected } from "../../connectors";
-import { DialogTitle } from "@material-ui/core";
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useModalChecker } from "../../store/app/hooks";
+import Divider from "@material-ui/core/Divider";
+import { useCloseModal } from "../../store/app/hooks";
 
-interface IWeb3Modal {
-  isOpen: boolean;
-  close: () => void;
-}
+export const ProviderLogo = styled.img`
+  width: 30px;
+  margin-right: 10px;
+`;
 
-declare const window: any;
+export const DiglogHeader = styled.h2`
+  font-weight: 800;
+  color: #222;
+  font-size: large;
+`;
 
-const Web3Modal = ({ isOpen, close }: IWeb3Modal) => {
-  /* const WALLET_SCREENS = {
-    PENDING: "pending",
-    ERROR: "error",
-    ACCOUNT: "account",
- }; */
-  const getWallets = () => {
-    // iterate the WALLET loop here
-    Object.keys(WALLETS).map((key) => {
-      const wallet = WALLETS[key];
-      // install metamask if not
-      if (wallet.connector === injected) {
-        // check if user have metamask or not.
-        if (window.ethereum === undefined) {
-          // set the description
-          wallet.description = "Install Metamask.";
-          console.log("metamask not available");
-        }
-      }
-      return (
-        <>
-          <p key={key}>{wallet.name}</p>
-        </>
-      );
-    });
-  };
-  const getConnectorScreen = () => {
-    // this is default case.
-    return (
-      <>
-        <DialogTitle>Connect Wallet</DialogTitle>
-        {getWallets()}
-      </>
-    );
-  };
+const ProviderWrapper = styled.button`
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: #dedede;
+  display: flex;
+  border: 0;
+  width: 420px;
+  align-items: center;
+`;
+
+const ProviderName = styled.h4`
+  color: #222;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+`;
+const Web3Modal = () => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const { activate } = useWeb3React();
+
+  const close = useCloseModal();
+
+  const isOpen: boolean = useModalChecker();
   return (
-    <Fragment>
-      <Modal isOpen={isOpen} close={close}>
-        {getConnectorScreen()}
-      </Modal>
-    </Fragment>
+    <Dialog
+      aria-labelledby="simple-dialog-title"
+      fullScreen={fullScreen}
+      open={isOpen}
+    >
+      <DiglogHeader>Connect Wallet</DiglogHeader>
+      <Divider />
+      <List component="nav" aria-label="providers">
+        {Object.keys(WALLETS).map((key) => {
+          const provider = WALLETS[key];
+          return (
+            <ProviderWrapper
+              onClick={() => {
+                activate(provider.connector);
+              }}
+            >
+              <ListItemIcon>
+                <ProviderLogo src={provider.logoUri} alt={provider.name} />
+              </ListItemIcon>
+              <ProviderName>{provider.name}</ProviderName>
+            </ProviderWrapper>
+          );
+        })}
+      </List>
+
+      <DialogActions>
+        <Button variant="contained" color="primary" onClick={close}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

@@ -1,8 +1,10 @@
 import { injected } from "../connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import MetamaskLogo from "../assests/Images/metamask.png";
+import MetamaskLogo from "../assests/images/metamask.png";
 
 export const ORO = "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46";
+
+export const DRAWER_WIDTH = 240;
 
 interface IWallet {
   [connetorName: string]: {
@@ -20,6 +22,6 @@ export const WALLETS: IWallet = {
     name: "Metamask",
     connector: injected,
     description: "Chrome Extension Trusted By 10 Million Users.",
-    isMobileSupported: false,
-  },
+    isMobileSupported: false
+  }
 };
