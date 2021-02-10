@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { DiglogHeader } from "../Web3Modal";
 import Modal from "../Modal";
 import List from "@material-ui/core/List";
-import chains from "../../constants/chains";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import { AiOutlineClose } from "react-icons/ai";
 import IconButton from "@material-ui/core/IconButton";
+import { SupportedTokens } from "../../constants/index";
+import { useDispatch } from "react-redux";
+import { setStakingDetails } from "../../store/stake/action";
 
 interface ITokenSearchModal {
   isOpen: boolean;
@@ -46,6 +48,26 @@ const FlexHeader = styled.div`
 `;
 
 const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
+  const dispatch = useDispatch();
+
+  const SelectTokens = useCallback(
+    (icon, name, isSelected, tokenAddress) => {
+      dispatch(
+        setStakingDetails({
+          icon,
+          name,
+          isSelected,
+          tokenAddress,
+          decimals: 18
+        })
+      );
+
+      // close this modal
+      close();
+    },
+    [dispatch]
+  );
+
   return (
     <Modal isOpen={isOpen} close={close}>
       <FlexHeader>
@@ -55,16 +77,26 @@ const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
         </IconButton>
       </FlexHeader>
       <Divider />
-      {Object.keys(chains).map((key) => {
-        const chainProviders = chains[key];
+      {Object.keys(SupportedTokens).map((key) => {
+        const support = SupportedTokens[key];
         return (
           <List>
-            <ListItemWrapper isSelected={false}>
-              <StyledChainIcon
-                src={chainProviders.chainIcon}
-                alt={chainProviders.chainName}
-              />
-              <StyledChainName>{chainProviders.chainName}</StyledChainName>
+            <ListItemWrapper
+              isSelected={false}
+              onClick={() => {
+                return SelectTokens(
+                  support.icon,
+                  support.name,
+                  true,
+                  support.address
+                );
+              }}
+            >
+              {support.icon && (
+                <StyledChainIcon src={support.icon} alt={support.name} />
+              )}
+
+              <StyledChainName>{support.name}</StyledChainName>
             </ListItemWrapper>
           </List>
         );

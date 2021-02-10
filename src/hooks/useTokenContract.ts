@@ -2,13 +2,18 @@ import { useMemo } from "react";
 import TokenABI from "../constants/ABI/ERC20.json";
 import { useWeb3React } from "@web3-react/core";
 import { getTokenInstance } from "../utils";
+import { UnifarmTokenAddress } from "../constants";
+import UnifarmABI from "../constants/ABI/UNIFARMV2.json";
 
 const useTokenContract = (address: string) => {
   const { library, active } = useWeb3React();
-  if (!active && !library) return null;
-  return useMemo(() => {
-    getTokenInstance(address, TokenABI, library);
-  }, [library, active]);
+  if (!active || !library || !address) return null;
+  return getTokenInstance(address, TokenABI, library);
 };
 
+export const useUnifarmV2Contract = () => {
+  const { library, active } = useWeb3React();
+  if (!active && !library) return null;
+  return getTokenInstance(UnifarmTokenAddress, UnifarmABI, library);
+};
 export default useTokenContract;

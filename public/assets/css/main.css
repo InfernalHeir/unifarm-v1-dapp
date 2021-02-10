@@ -2088,7 +2088,6 @@ html:not(.no-js) [data-aos="fade-up"] {
   justify-content: center;
   align-items: center;
   /*background-image: url("../img/inner/01.jpg");*/
-  background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
   height: 100%;

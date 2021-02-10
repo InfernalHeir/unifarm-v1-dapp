@@ -35,3 +35,20 @@ export const AccountDetails = styled.button`
   align-items: center;
   padding: 0.5rem;
 `;
+
+export const MyStakesRewards = styled.button<{ isMyStakes?: boolean }>`
+  border-radius: 6px;
+  background: #fd434f;
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem;
+  display: block;
+  margin-top: 10px;
+  margin-right: ${(props) => (props.isMyStakes ? "0" : "10")}px;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;

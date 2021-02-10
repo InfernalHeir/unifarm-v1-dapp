@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import List from "@material-ui/core/List";
 //import DialogTitle from "@material-ui/core/DialogTitle";
@@ -15,6 +15,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useModalChecker } from "../../store/app/hooks";
 import Divider from "@material-ui/core/Divider";
 import { useCloseModal } from "../../store/app/hooks";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useSetApplicationError } from "../../store/app/hooks";
 
 export const ProviderLogo = styled.img`
   width: 30px;
@@ -28,7 +30,7 @@ export const DiglogHeader = styled.h2`
 `;
 
 const ProviderWrapper = styled.button`
-  padding: 0.5rem;
+  padding: 1rem;
   border-radius: 12px;
   background: #dedede;
   display: flex;
@@ -43,14 +45,41 @@ const ProviderName = styled.h4`
   font-weight: 600;
   margin: 0;
 `;
+
+const Circle = styled.div`
+  height: 8px;
+  width: 8px;
+  background-color: #4bb543;
+  border-radius: 50%;
+  margin-right: 4px;
+`;
 const Web3Modal = () => {
+  const [
+    activeConnector,
+    setActiveConnector
+  ] = useState<AbstractConnector | null>();
+
   const theme = useTheme();
+
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const { activate } = useWeb3React();
 
   const close = useCloseModal();
 
+  const tryActivating = async (connector: AbstractConnector) => {
+    // activate the connector
+    try {
+      await activate(connector);
+      // set the active connector
+      setActiveConnector(connector);
+      // then close the modal
+      close();
+    } catch (err) {
+      useSetApplicationError(err);
+      close();
+    }
+  };
   const isOpen: boolean = useModalChecker();
   return (
     <Dialog
@@ -63,15 +92,18 @@ const Web3Modal = () => {
       <List component="nav" aria-label="providers">
         {Object.keys(WALLETS).map((key) => {
           const provider = WALLETS[key];
+          const activeOne = activeConnector === provider.connector;
           return (
             <ProviderWrapper
               onClick={() => {
-                activate(provider.connector);
+                tryActivating(provider.connector);
               }}
+              key={key}
             >
               <ListItemIcon>
                 <ProviderLogo src={provider.logoUri} alt={provider.name} />
               </ListItemIcon>
+              {activeOne && <Circle />}
               <ProviderName>{provider.name}</ProviderName>
             </ProviderWrapper>
           );

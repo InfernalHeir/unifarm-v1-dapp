@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, AppState } from "../index";
-import { setOpenModal, setCloseModal } from "./action";
+import { setOpenModal, setCloseModal, setApplicationError } from "./action";
 
 export const useModalChecker = (): boolean => {
   const state: boolean = useSelector((state: AppState) => {
@@ -31,4 +31,18 @@ export const useCloseModal = () => {
       })
     );
   }, [dispatch]);
+};
+
+export const useSetApplicationError = (error: Error) => {
+  const dispatch = useDispatch<AppDispatch>();
+  useMemo(
+    () =>
+      dispatch(
+        setApplicationError({
+          appStatus: false,
+          message: error.message
+        })
+      ),
+    [dispatch]
+  );
 };

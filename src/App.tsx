@@ -8,7 +8,10 @@ import { Web3ReactProvider } from "@web3-react/core";
 import Web3Modal from "./components/Web3Modal";
 import Stake from "./pages/stake";
 import "./index.css";
-import TokenSearchModal from "./components/TokenSearhModal";
+import Calculator from "./pages/calculator";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Web3ReactManager from "./components/Web3ReactManager";
+import StakeInfo from "./pages/stakinginfo";
 
 const App = () => {
   const getLibrary = (provider) => {
@@ -16,14 +19,21 @@ const App = () => {
   };
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <Stake />
-          <Web3Modal />
-        </Web3ReactProvider>
-      </ThemeProvider>
-    </Provider>
+    <Router>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Web3ReactManager />
+            <Switch>
+              <Route path="/" component={Stake} exact />
+              <Route path="/stake" component={Calculator} />
+              <Route path="/staking-info" component={StakeInfo} />
+            </Switch>
+            <Web3Modal />
+          </Web3ReactProvider>
+        </ThemeProvider>
+      </Provider>
+    </Router>
   );
 };
 
