@@ -29,9 +29,9 @@ export const usePoolData = () => {
       })
     );
 
-    const getTokenDetails = await unifarm.tokenDetails(
-      selectedTokens.tokenAddress
-    );
+    const getTokenDetails = await unifarm.methods
+      .tokenDetails(selectedTokens.tokenAddress)
+      .call();
     console.log(getTokenDetails);
 
     var obj = {};
@@ -46,7 +46,7 @@ export const usePoolData = () => {
     obj["lockIn"] = lockableDays.toString();
     obj["maxStakingLimit"] = formatEther(userMaxStake);
     obj["network"] = "Ethereum";
-    obj["moreDetailsRoute"] = "/calculator";
+    obj["moreDetailsRoute"] = "/stake";
     obj["isFired"] = true;
 
     // after fetching that

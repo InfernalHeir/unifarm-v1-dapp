@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
@@ -125,12 +126,22 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                             </div>
                           </div>
                           <div className="col-md-12  text-lg-right select-unstaike-button">
+                            <Link
+                              style={{
+                                background: "transparent",
+                                color: "#222"
+                              }}
+                              to={item.moreDetailsRoute}
+                            >
+                              More info
+                            </Link>
+
                             <a
                               href="#"
                               className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
                               style={{ fontSize: 12, marginTop: -16 }}
                             >
-                              Unstake & Claim
+                              Stake
                             </a>
                           </div>
                         </div>
