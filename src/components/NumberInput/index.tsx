@@ -2,6 +2,9 @@ import React, { Fragment, useCallback, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
 import TokenSearchModal from "../TokenSearhModal";
+import { useSelectedTokens, useOnChange } from "../../store/stake/hooks";
+import { TokenLogo } from "../../pages/calculator";
+import { useWeb3React } from "@web3-react/core";
 
 const InputWrapper = styled.div`
   display: flex;
@@ -26,6 +29,7 @@ text-overflow: ellipsis;
 padding: 0px;
 -webkit-appearance: textfield;
 appearance: textfield;
+text-align: end;
 }
 `;
 
@@ -44,6 +48,9 @@ align-items:center;
 const NumberInput = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
+  const selectedToken = useSelectedTokens();
+
+  const { onInputChange } = useOnChange();
   const open = useCallback(() => {
     setOpen(true);
   }, [isOpen]);
@@ -52,13 +59,31 @@ const NumberInput = () => {
     setOpen(false);
   }, [isOpen]);
 
+  const { active } = useWeb3React();
+
   return (
     <Fragment>
       <InputWrapper>
-        <Input type="number" placeholder="Staking Amount" />
         <Select onClick={open}>
-          Select Token <IoIosArrowDown />
+          {selectedToken.isSelected ? (
+            <>
+              <TokenLogo src={selectedToken.icon} alt={selectedToken.name} />
+              {selectedToken.name}
+              <IoIosArrowDown />
+            </>
+          ) : (
+            <>
+              Select Token <IoIosArrowDown />
+            </>
+          )}
         </Select>
+
+        <Input
+          type="number"
+          disabled={!active || !selectedToken.tokenAddress}
+          placeholder="Staking Amount"
+          onChange={(e) => onInputChange(Number(e.target.value))}
+        />
       </InputWrapper>
       <TokenSearchModal
         isOpen={isOpen}

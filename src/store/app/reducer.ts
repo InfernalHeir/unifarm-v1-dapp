@@ -3,7 +3,7 @@ import { setApplicationError, setCloseModal, setOpenModal } from "./action";
 
 interface IAppState {
   appStatus: boolean;
-  message: string | null;
+  message?: string | null;
   openModal: boolean;
 }
 

@@ -1,4 +1,5 @@
 import { UnifarmTokenAddress } from "../constants";
+import { SupportedTokens } from "../constants";
 
 export const getTokenBalance = async (
   contract: any,
@@ -27,4 +28,20 @@ export const isApprovalNeeded = async (
   } catch (err) {
     return err.message;
   }
+};
+
+export const getTokenSequenceList = (
+  contract: any,
+  tokenAddress: string
+): any[] => {
+  var arr = [];
+  if (!contract) return null;
+  Object.keys(SupportedTokens).map(async (key, index) => {
+    const tokenSequence = await contract.tokensSequenceList(
+      tokenAddress,
+      index
+    );
+    arr.push(tokenSequence[index]);
+  });
+  return arr;
 };

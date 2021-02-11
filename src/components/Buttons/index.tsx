@@ -12,7 +12,7 @@ export const Connect = styled.button`
   }
 `;
 
-export const ShowMePools = styled.button<{ isDisable: boolean }>`
+export const ShowMePools = styled.button<{ isDisable?: boolean }>`
   border-radius: 6px;
   background: ${(props) => (props.isDisable ? "#d3d3d3" : "#197bc2")};
   height: 3.5rem;

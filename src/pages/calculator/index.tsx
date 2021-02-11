@@ -40,20 +40,21 @@ const TokenSelector = styled.button`
   }
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ isDisable: boolean }>`
   width: 100%;
   margin-top: 10px;
   border: 1px solid #2222224a;
-  color: #222;
+  color: ${(props) => (props.isDisable ? "#dedede" : "#222")};
   max-width: 350px;
   padding: 1rem;
   border-radius: 10px;
   margin: auto;
   display: block;
   margin-top: 10px;
+  cursor: ${(props) => (props.isDisable ? "not-allowed" : "allowed")};
 `;
 
-const TokenLogo = styled.img`
+export const TokenLogo = styled.img`
   width: 25px;
   margin-right: 20px;
 `;
@@ -66,13 +67,12 @@ const Calculator = () => {
 
   const selectedCurrency: any = useSelectedTokens();
 
-  const { onInputChange } = useOnChange();
+  const { onInputChange, onCalculateRewards } = useOnChange();
   const { active } = useWeb3React();
 
   const close = () => {
     setOpen(false);
   };
-  console.log(state.appStatus);
   return (
     <AppBody logo={true}>
       <CalculatorWrapper>
@@ -96,11 +96,17 @@ const Calculator = () => {
         <StyledInput
           placeholder="No of Tokens to Stake"
           onChange={(e) => onInputChange(Number(e.target.value))}
+          isDisable={!selectedCurrency.isSelected}
         />
 
         <ShowMePools
-          isDisable={!active || !state.appStatus}
-          onClick={() => setShowCalculotor(true)}
+          disabled={
+            !active || !state.appStatus || !selectedCurrency.stakingAmount
+          }
+          isDisable={
+            !active || !state.appStatus || !selectedCurrency.stakingAmount
+          }
+          onClick={() => onCalculateRewards()}
         >
           {!state.appStatus ? (
             state.message
@@ -110,11 +116,10 @@ const Calculator = () => {
             <>Connect Wallet</>
           )}
         </ShowMePools>
-        {console.log(state.message)}
       </CalculatorWrapper>
       {showCalculotor && <CalculatorRewards />}
 
-      <TokenSearchModal heading="Select Token" isOpen={isOpen} close={close} />
+      <TokenSearchModal heading="Select Tokens" isOpen={isOpen} close={close} />
     </AppBody>
   );
 };

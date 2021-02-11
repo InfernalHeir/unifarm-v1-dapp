@@ -20,7 +20,7 @@ const useFetchTokenBalance = (tokenAddress: string) => {
       .catch((err) => {
         console.log(err.message);
       });
-  }, [active, instance]);
+  }, [instance]);
   return isApprovalNeed;
 };
 

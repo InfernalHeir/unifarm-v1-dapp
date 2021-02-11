@@ -1,6 +1,6 @@
 {
   "rules": {
-    "no-await-in-loop": "error",
+    "no-await-in-loop": "off",
     "eqeqeq": "error",
     "no-unused-vars": "off",
     "no-console": "off",

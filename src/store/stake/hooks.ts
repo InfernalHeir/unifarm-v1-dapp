@@ -1,11 +1,12 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStakingDetails, TypeInput } from "./action";
 import { AppState } from "../index";
 import useFetchTokenBalance from "../../hooks/useFetchTokenBalance";
 import { setApplicationError } from "../app/action";
-import { useWeb3React } from "@web3-react/core";
-import { formatEther } from "@ethersproject/units";
+import { parseUnits, formatEther } from "@ethersproject/units";
+import { useUnifarmV2Contract } from "../../hooks/useTokenContract";
+import { tokenAddressArray } from "../../constants";
 
 export const useSetTokenDetails = (dispatchArgs: any | null) => {
   if (dispatchArgs === null) return null;
@@ -26,14 +27,11 @@ export const useOnChange = () => {
   const state = useSelectedTokens();
 
   const getBalance: any = useFetchTokenBalance(state.tokenAddress);
-
   const dispatch = useDispatch();
-
   const onInputChange = (value: number) => {
-    const etherValue: any = formatEther(getBalance);
-    if (value > etherValue) {
+    if (value * 10 * 10 ** 18 > getBalance) {
       // set Application here
-      dispatch(
+      return dispatch(
         setApplicationError({
           appStatus: false,
           message: `Insufficient ${state.name} Tokens`
@@ -41,12 +39,55 @@ export const useOnChange = () => {
       );
     }
     dispatch(
+      setApplicationError({
+        appStatus: true
+      })
+    );
+
+    dispatch(
       TypeInput({
         stakingAmount: value
       })
     );
   };
+  const contract = useUnifarmV2Contract();
+
+  const onCalculateRewards = async () => {
+    let totalStaked = await contract.totalStaking(state.tokenAddress);
+
+    const selectedTokenRewardByOther = [];
+
+    for (const key in tokenAddressArray) {
+      const tokenDailyDistribution = await contract.tokenDailyDistribution(
+        state.tokenAddress,
+        tokenAddressArray[key]
+      );
+
+      const selectedTokenReward =
+        (state.stakingAmount * tokenDailyDistribution) / (10 * 10 ** 18);
+
+      selectedTokenRewardByOther.push(selectedTokenReward);
+      // console.log('selectedTokenReward', selectedTokenReward);
+    }
+    const dsequenceList = [];
+    var i: number;
+    for (let i = 0; i < 9; i++) {
+      const sequence = await contract.tokensSequenceList(state.tokenAddress, i);
+      dsequenceList.push(sequence.toLowerCase());
+    }
+
+    const sequenceList = [];
+    for (let i = 0; i < 9; i++) {
+      let key = getKeyByValue(tokenAddressArray, dsequenceList[i]);
+      sequenceList.push(key);
+    }
+    function getKeyByValue(object, value) {
+      return Object.keys(object).find((key) => object[key] === value);
+    }
+  };
+
   return {
-    onInputChange
+    onInputChange,
+    onCalculateRewards
   };
 };

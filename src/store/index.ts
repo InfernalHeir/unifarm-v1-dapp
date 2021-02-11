@@ -1,10 +1,12 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { app } from "./app/reducer";
 import { stakeReducer } from "./stake/reducer";
+import { poolReducer } from "./pools/reducer";
 
 const reducers = {
   app,
-  stakeReducer
+  stakeReducer,
+  poolReducer
 };
 
 const store = configureStore({
