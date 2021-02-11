@@ -12,3 +12,5 @@ export const setOpenModal = createAction<{ openModal: boolean }>(
 export const setCloseModal = createAction<{ openModal: boolean }>(
   "app/setCloseModal"
 );
+
+export const setLoader = createAction<{ loading: boolean }>("app/setLoader");

@@ -3,22 +3,32 @@ import { useWeb3React } from "@web3-react/core";
 import { validateAddress } from "../utils";
 import useTokenContract, { useUnifarmV2Contract } from "./useTokenContract";
 import { UnifarmTokenAddress } from "../constants";
+import { formatEther } from "@ethersproject/units";
 
-const useApprovalNeeded = (stakeAmount: string) => {
+const useApprovalNeeded = (tokenAddress: string, stakeAmount: number) => {
   const { active, account } = useWeb3React();
-  if (!active) return null;
 
   const [isApprovalNeed, setApprove] = useState<boolean | string>(null);
 
   const isAddress = validateAddress(account);
-  const instance: any = useTokenContract(
-    "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46"
-  );
+
+  const instance: any = useTokenContract(tokenAddress);
 
   useEffect(() => {
-    instance.allowance(isAddress, UnifarmTokenAddress).then((result) => {
-      setApprove(result.toString());
-    });
+    if (!active || !instance) return null;
+    instance
+      .allowance(isAddress, UnifarmTokenAddress)
+      .then((result) => {
+        const approvedTokens: number = parseFloat(formatEther(result));
+        if (stakeAmount > approvedTokens) {
+          return setApprove(true);
+        } else {
+          setApprove(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   }, [active, account]);
   return isApprovalNeed;
 };

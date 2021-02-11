@@ -50,7 +50,7 @@ const NumberInput = () => {
 
   const selectedToken = useSelectedTokens();
 
-  const { onInputChange } = useOnChange();
+  const { onInputChange }: any = useOnChange();
   const open = useCallback(() => {
     setOpen(true);
   }, [isOpen]);

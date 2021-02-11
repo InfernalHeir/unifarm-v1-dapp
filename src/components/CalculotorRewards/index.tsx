@@ -7,8 +7,37 @@ import five from "../../assests/images/Tokens/matic.png";
 import ProgressBar from "react-customizable-progressbar";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
-import { StepLabel } from "@material-ui/core";
+import { CircularProgress, StepLabel } from "@material-ui/core";
 import styled from "styled-components";
+import useTokenContract, {
+  useUnifarmV2Contract
+} from "../../hooks/useTokenContract";
+import { useSelectedTokens } from "../../store/stake/hooks";
+import { useWeb3React } from "@web3-react/core";
+import { UnifarmTokenAddress } from "../../constants";
+import { formatEther, parseUnits } from "@ethersproject/units";
+import { Redirect } from "react-router-dom";
+import { isAddress } from "@ethersproject/address";
+
+const StyledAlert = styled.div`
+  display: flex;
+  margin-top: 20px;
+  border-radius: 8px;
+  border-color: red;
+  text-align: center;
+  width: 100%;
+  border: 2px solid red;
+  padding: 11px;
+  font-weight: 800;
+`;
+
+const HeaderReturn = styled.div`
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 22px;
+  text-align: center;
+`;
 
 const ReturnsWrapper = styled.div`
   max-width: 550px;
@@ -34,6 +63,7 @@ const DaysTitle = styled.span`
 `;
 
 function CalculotorRewards() {
+  const selectedToken = useSelectedTokens();
   const [oro, setOro] = useState(200);
   const [matic, setMatic] = useState(100);
   const [cntr, setCntr] = useState(0.5336);
@@ -45,6 +75,13 @@ function CalculotorRewards() {
   const [stack, setStack] = useState(false);
   const [aprove, setAprove] = useState(false);
   const [btnDisabled, setbtnDisabled] = useState(false);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [error, setError] = useState<{ err: boolean; message: string | null }>({
+    err: false,
+    message: null
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -69,11 +106,171 @@ function CalculotorRewards() {
     setbtnDisabled(true);
   }
 
+  const { active, account, library } = useWeb3React();
+  const instance = useTokenContract(selectedToken.tokenAddress);
+
+  useEffect(() => {
+    if (!instance || !active || !account) return null;
+    instance.methods
+      .allowance(account, UnifarmTokenAddress)
+      .call()
+      .then((result) => {
+        const etherAmount = library.utils.fromWei(result.toString());
+        console.log(etherAmount);
+        if (selectedToken.stakingAmount > etherAmount) {
+          setAprove(true);
+        }
+      })
+      .catch((err) => {
+        setError({
+          err: true,
+          message: err.message
+        });
+      });
+  }, [selectedToken]);
+
+  const unifarmInstance = useUnifarmV2Contract();
+
+  useEffect(() => {
+    if (!unifarmInstance || !active || !account) return null;
+    unifarmInstance.methods
+      .whiteList(account)
+      .call()
+      .then((result) => {
+        if (!result) {
+          setError({
+            err: true,
+            message: "The Address you 're using is not Whitelisted."
+          });
+        } else {
+          setError({
+            err: false,
+            message: null
+          });
+        }
+      })
+      .catch((err) => {
+        setError({
+          err: true,
+          message: err.message
+        });
+      });
+  }, [selectedToken]);
+
+  const ApproveCallback = async () => {
+    try {
+      setLoading(true);
+      const parseTokens = library.utils.toWei(
+        selectedToken.stakingAmount.toString()
+      );
+      await instance.methods.approve(UnifarmTokenAddress, parseTokens).send({
+        from: account
+      });
+      // dispatch applciation success here.
+      alert("Approved Sucessfully");
+      setLoading(false);
+      setStack(true);
+    } catch (err) {
+      // dispatch an application error.
+      alert(err.message);
+      setLoading(false);
+    }
+  };
+
+  const StakeCallback = async () => {
+    const stakeAmount = selectedToken.stakingAmount;
+    // but first we have to check referal address
+    const amount = library.utils.toWei(stakeAmount.toString());
+
+    const refer = "0xF6C172dd45ABd82E1F067801B309A7fFC4977971";
+    try {
+      const tokenDetails = await unifarmInstance.methods
+        .tokenDetails(selectedToken.tokenAddress)
+        .call();
+      const useMaxStake = tokenDetails[2];
+      if (amount > useMaxStake) {
+        alert("You are Cross the user max Limit");
+        return null;
+      } else {
+        await unifarmInstance.methods.stake(refer, account, amount).send({
+          from: account
+        });
+
+        return (
+          <Redirect
+            to={{
+              pathname: "/staking-history"
+            }}
+          />
+        );
+      }
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const RenderDyanmicElement = () => {
+    if (error.err) {
+      return <StyledAlert>{error.message}</StyledAlert>;
+    } else {
+      return (
+        <>
+          {loading ? (
+            <button
+              style={{ backgroundColor: "green", padding: "2px" }}
+              className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
+              disabled
+            >
+              <CircularProgress style={{ color: "#fff" }} />
+            </button>
+          ) : aprove ? (
+            <button
+              onClick={ApproveCallback}
+              className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
+              disabled={stack}
+            >
+              Approve
+              <span>
+                <i className="tio chevron_right mr-1 align-middle font-s-16">
+                  {" "}
+                </i>
+              </span>
+            </button>
+          ) : (
+            ""
+          )}
+
+          {stack ? (
+            <button
+              //to="/Balance5"
+              className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white rounded-4 ml-4 link-btn btn-hover btn-approved"
+              onClick={StakeCallback}
+            >
+              Stake
+              <span>
+                <i className="tio chevron_right mr-1 align-middle font-s-16">
+                  {" "}
+                </i>
+              </span>
+            </button>
+          ) : null}
+          <Stepper activeStep={step} alternativeLabel>
+            <Step style={{ width: 10 }}>
+              <StepLabel></StepLabel>
+            </Step>
+            <Step style={{ width: 10 }}>
+              <StepLabel></StepLabel>
+            </Step>
+          </Stepper>
+        </>
+      );
+    }
+  };
   return (
     <div>
       <ReturnsWrapper className="row">
         <div className="col-12 mt-1 mb-4 pb-2">
-          <h2 style={{ textAlign: "center" }}>Return</h2>
+          <HeaderReturn>Return</HeaderReturn>
         </div>
         <div className="calculate_yield_list">
           <div className="progessba" style={{ width: 350 }}>
@@ -141,55 +338,7 @@ function CalculotorRewards() {
         </div>
         {day === 90 ? (
           <div className="col-12 text-center mt-4 pb-2 mb-2 ">
-            {btnDisabled ? (
-              <button
-                style={{ backgroundColor: "green" }}
-                className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
-                disabled
-              >
-                Approved
-                <span>
-                  <i className="tio chevron_right mr-1 align-middle font-s-16">
-                    {" "}
-                  </i>
-                </span>
-              </button>
-            ) : (
-              <button
-                onClick={approve}
-                className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
-              >
-                Approve
-                <span>
-                  <i className="tio chevron_right mr-1 align-middle font-s-16">
-                    {" "}
-                  </i>
-                </span>
-              </button>
-            )}
-
-            {stack ? (
-              <button
-                //to="/Balance5"
-                className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white rounded-4 ml-4 link-btn btn-hover btn-approved"
-              >
-                Stake
-                <span>
-                  <i className="tio chevron_right mr-1 align-middle font-s-16">
-                    {" "}
-                  </i>
-                </span>
-              </button>
-            ) : null}
-
-            <Stepper activeStep={step} alternativeLabel>
-              <Step style={{ width: 10 }}>
-                <StepLabel></StepLabel>
-              </Step>
-              <Step style={{ width: 10 }}>
-                <StepLabel></StepLabel>
-              </Step>
-            </Stepper>
+            <RenderDyanmicElement />
           </div>
         ) : null}
       </ReturnsWrapper>

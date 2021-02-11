@@ -7,6 +7,7 @@ import { setApplicationError } from "../app/action";
 import { parseUnits, formatEther } from "@ethersproject/units";
 import { useUnifarmV2Contract } from "../../hooks/useTokenContract";
 import { tokenAddressArray } from "../../constants";
+import useApprovalNeeded from "../../hooks/useApprovalNeeded";
 
 export const useSetTokenDetails = (dispatchArgs: any | null) => {
   if (dispatchArgs === null) return null;
@@ -50,10 +51,9 @@ export const useOnChange = () => {
       })
     );
   };
-  const contract = useUnifarmV2Contract();
 
   const onCalculateRewards = async () => {
-    let totalStaked = await contract.totalStaking(state.tokenAddress);
+    /* let totalStaked = await contract.totalStaking(state.tokenAddress);
 
     const selectedTokenRewardByOther = [];
 
@@ -84,6 +84,7 @@ export const useOnChange = () => {
     function getKeyByValue(object, value) {
       return Object.keys(object).find((key) => object[key] === value);
     }
+  }; */
   };
 
   return {

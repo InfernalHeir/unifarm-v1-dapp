@@ -12,8 +12,9 @@ const useFetchTokenBalance = (tokenAddress: string) => {
 
   useEffect(() => {
     if (!active || !account || !library || !instance) return null;
-    instance
+    instance.methods
       .balanceOf(isAddress)
+      .call()
       .then((result) => {
         setApprove(result.toString());
       })

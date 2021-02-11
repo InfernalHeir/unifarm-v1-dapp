@@ -67,12 +67,12 @@ const Calculator = () => {
 
   const selectedCurrency: any = useSelectedTokens();
 
-  const { onInputChange, onCalculateRewards } = useOnChange();
+  const { onInputChange }: any = useOnChange();
   const { active } = useWeb3React();
-
   const close = () => {
     setOpen(false);
   };
+
   return (
     <AppBody logo={true}>
       <CalculatorWrapper>
@@ -106,7 +106,7 @@ const Calculator = () => {
           isDisable={
             !active || !state.appStatus || !selectedCurrency.stakingAmount
           }
-          onClick={() => onCalculateRewards()}
+          onClick={() => setShowCalculotor(true)}
         >
           {!state.appStatus ? (
             state.message

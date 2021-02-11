@@ -1,28 +1,40 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { setDailyRewardsDistrubution } from "./action";
 
-interface InitialPoolState {
-  [index: number]: {
-    poolName?: string;
-    poolIcon?: string;
-    rewardsSequenceSrc?: string[];
-    Apy?: string | null;
-    lockIn?: string;
-    maxStakingLimit: number;
-    network: string;
-    moreDetailsRoute: string;
-    isFired: boolean;
-  };
+export interface PayloadSize {
+  poolName?: string;
+  poolIcon?: string;
+  rewardsSequenceSrc?: string[];
+  Apy?: string | null;
+  lockIn?: string;
+  maxStakingLimit: number;
+  network: string;
+  moreDetailsRoute: string;
+  isFired: boolean;
 }
 
-const poolState: InitialPoolState = {
-  0: null
+interface InitialPoolState {
+  fullfilled: boolean | null;
+  poolData?: PayloadSize[] | null;
+}
+
+const poolInitialState: InitialPoolState = {
+  fullfilled: null,
+  poolData: null
 };
+
 export const poolReducer = createReducer<InitialPoolState>(
-  poolState,
+  poolInitialState,
   (builder) => {
-    builder.addCase(setDailyRewardsDistrubution, (state, { payload }) => {
-      return payload;
-    });
+    builder.addCase(
+      setDailyRewardsDistrubution,
+      (state, { payload: { fullfilled, poolData } }) => {
+        return {
+          ...state,
+          fullfilled,
+          poolData
+        };
+      }
+    );
   }
 );

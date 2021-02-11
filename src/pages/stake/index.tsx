@@ -8,9 +8,11 @@ import styled from "styled-components";
 import { useSelectedTokens } from "../../store/stake/hooks";
 import { usePoolData } from "../../store/pools/hooks";
 import { AppState } from "../../store";
-import { useSelector } from "react-redux";
 import { Connect } from "../../components/Buttons";
 import { useTriggerOpenModal } from "../../store/app/hooks";
+import { useSelector } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
+import PoolComponent from "../../components/PoolComponent";
 
 const Wrapper = styled.div`
   width: 550px;
@@ -31,6 +33,14 @@ const Stake = () => {
 
   const open = useTriggerOpenModal();
 
+  const loading = useSelector((state: AppState) => {
+    return state.app.loading;
+  });
+
+  const poolData: any = useSelector((state: AppState) => {
+    return state.poolReducer;
+  });
+
   return (
     <AppBody logo={true}>
       <Typography>Calculate Your Earnings</Typography>
@@ -47,7 +57,17 @@ const Stake = () => {
             }
             onClick={() => getPoolInfo()}
           >
-            {!state.appStatus ? state.message : <>Show me Pools</>}
+            {!state.appStatus ? (
+              state.message
+            ) : (
+              <>
+                {loading ? (
+                  <CircularProgress style={{ width: "24px", color: "#fff" }} />
+                ) : (
+                  <>Show me Pools</>
+                )}
+              </>
+            )}
           </ShowMePools>
         ) : (
           <Connect style={{ width: "100%", marginTop: "10px" }} onClick={open}>
@@ -55,6 +75,7 @@ const Stake = () => {
           </Connect>
         )}
       </Wrapper>
+      {poolData.fullfilled && <PoolComponent showRewards={poolData.poolData} />}
     </AppBody>
   );
 };
