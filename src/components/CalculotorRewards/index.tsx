@@ -14,7 +14,7 @@ import useTokenContract, {
 } from "../../hooks/useTokenContract";
 import { useOnChange, useSelectedTokens } from "../../store/stake/hooks";
 import { useWeb3React } from "@web3-react/core";
-import { UnifarmV2Address } from "../../constants";
+import { UnifarmV1Address, UnifarmV2Address } from "../../constants";
 import { formatEther, parseUnits } from "@ethersproject/units";
 import { Redirect } from "react-router-dom";
 import { isAddress } from "@ethersproject/address";
@@ -114,13 +114,16 @@ function CalculotorRewards() {
   useEffect(() => {
     if (!instance || !active || !account) return null;
     instance.methods
-      .allowance(account, UnifarmV2Address)
+      .allowance(account, UnifarmV1Address)
       .call()
       .then((result) => {
+        console.log(result);
         const etherAmount = library.utils.fromWei(result.toString());
         if (selectedToken.stakingAmount > etherAmount) {
-          setAprove(false);
+          setAprove(true);
           setStack(true);
+        } else {
+          setAprove(false);
         }
       })
       .catch((err) => {
@@ -188,7 +191,6 @@ function CalculotorRewards() {
                   ? "approved-button"
                   : "btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
               }
-              disabled={stack}
             >
               Approve
               <span>

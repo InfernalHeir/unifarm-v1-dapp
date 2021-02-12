@@ -17,6 +17,7 @@ export const ShowMePools = styled.button<{ isDisable?: boolean }>`
   background: ${(props) => (props.isDisable ? "#d3d3d3" : "#197bc2")};
   height: 3.5rem;
   padding: 10px;
+  text-transform: capitalize;
   border-radius: 6px;
   border: 0;
   width: 100%;

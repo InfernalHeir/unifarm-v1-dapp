@@ -180,9 +180,9 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_stakedAmount", "type": "uint256" },
-      { "internalType": "address", "name": "_stakedToken", "type": "address" },
-      { "internalType": "address", "name": "_rewardToken", "type": "address" }
+      { "internalType": "uint256", "name": "stakedAmount", "type": "uint256" },
+      { "internalType": "address", "name": "stakedToken", "type": "address" },
+      { "internalType": "address", "name": "rewardToken", "type": "address" }
     ],
     "name": "getOneDayReward",
     "outputs": [
@@ -414,8 +414,11 @@
     ],
     "name": "viewAvailableRewards",
     "outputs": [
-      { "internalType": "uint256", "name": "availStake", "type": "uint256" },
-      { "internalType": "uint256", "name": "availReward", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "availableReward",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -428,7 +431,6 @@
     "outputs": [
       { "internalType": "address[]", "name": "", "type": "address[]" },
       { "internalType": "bool[]", "name": "", "type": "bool[]" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" }

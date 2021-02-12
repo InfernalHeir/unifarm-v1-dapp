@@ -62,7 +62,7 @@ const Stake = () => {
                 {loading ? (
                   <CircularProgress style={{ width: "24px", color: "#fff" }} />
                 ) : (
-                  <>Show me Pools</>
+                  <>Show me Available Pools</>
                 )}
               </>
             )}

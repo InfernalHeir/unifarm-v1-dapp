@@ -99,6 +99,9 @@ const Calculator = () => {
           onChange={(e) => onInputChange(Number(e.target.value))}
           isDisable={!selectedCurrency.isSelected || !active}
           disabled={!selectedCurrency.isSelected || !active}
+          value={
+            selectedCurrency.stakingAmount && selectedCurrency.stakingAmount
+          }
         />
 
         <ShowMePools

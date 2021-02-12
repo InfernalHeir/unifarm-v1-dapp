@@ -15,7 +15,7 @@ const UnifarmLogo = () => {
       <div className="col-12">
         <div className="title_sign text-center">
           <img src={logo} width="50%" className="mb-2" />
-          <Slogan>"Stake one token, and earn 5 tokens. No lock-in."</Slogan>
+          <Slogan>"Stake one token, and earn Multiple tokens."</Slogan>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ export interface PayloadSize {
   network: string;
   moreDetailsRoute: string;
   isFired: boolean;
+  typeFor: string;
 }
 
 interface InitialPoolState {

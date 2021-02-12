@@ -43,3 +43,7 @@ export const getExactAddress = (TypeFor: string) => {
   }
   return UnifarmV2Address;
 };
+
+export function getKeyByValue(object, value) {
+  return Object.keys(object).find((key) => object[key] === value);
+}

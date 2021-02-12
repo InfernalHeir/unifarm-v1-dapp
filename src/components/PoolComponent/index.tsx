@@ -1,17 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { blue } from "@material-ui/core/colors"
+import React from "react"
+import { Link } from "react-router-dom"
+import styled from "styled-components"
+import { useOnChange } from "../../store/stake/hooks"
 
 const StyledPoolIcon = styled.img`
   width: 30px;
   margin-left: 5px;
-`;
+`
 
 const StyledPoolName = styled.h5`
   font-weight: 800;
-`;
+`
 
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
+  const { onStake }: any = useOnChange()
   return (
     <div>
       {showRewards
@@ -36,7 +39,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                   >
                     <div className="btn scale btn_lg_primary1  br-10 effect-letter rounded-4">
                       {item.rewardsSequenceSrc.map((img) => {
-                        return <img src={img} width="30" alt={index} />;
+                        return <img src={img} width="30" alt={index} />
                       })}
                     </div>
                   </div>
@@ -55,7 +58,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                   <div className="row">
                                     <div className="col-md-2">
                                       <div>
-                                        <b>APR</b>
+                                        <b>APY</b>
                                         <br />
                                         <span>{item.Apy}</span>
                                       </div>
@@ -82,7 +85,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                       <div>
                                         <b>Network</b>
                                         <br />
-                                        <span>View on {item.network}</span>
+                                        <span>{item.network}</span>
                                       </div>
                                     </div>
                                     {/* <div className="col-md-4"><div><b>Max Staking Limit</b><br/><span>1500</span></div></div><div className="col-md-4"><div><img src={one} width="20"/><br/><span>20 ORO</span></div></div>
@@ -135,22 +138,22 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                   <Link
                                     style={{
                                       background: "transparent",
-                                      color: "#222"
+                                      color: "blue"
                                     }}
                                     to={item.moreDetailsRoute}
                                   >
                                     More info
                                   </Link>
 
-                                  <a
-                                    href="#"
+                                  <button
+                                    onClick={() => onStake(item.typeFor)}
                                     className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
                                     style={{
                                       fontSize: 12
                                     }}
                                   >
                                     Stake Now
-                                  </a>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -164,10 +167,10 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                   </div>
                 </div>
               </div>
-            );
+            )
           })
         : ""}
     </div>
-  );
-};
-export default PoolComponent;
+  )
+}
+export default PoolComponent
