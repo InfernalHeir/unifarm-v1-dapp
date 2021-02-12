@@ -39,6 +39,7 @@ export const usePoolData = () => {
     // for v1
     var tokenSequenceListForV1 = [];
     var i;
+
     for (i = 0; i < 5; i++) {
       const tokenSequnence = await unifarmV1.methods
         .tokensSequenceList(selectedTokens.tokenAddress, i)
@@ -49,9 +50,22 @@ export const usePoolData = () => {
     let imageSrcArray = [];
     let k;
 
-    for (k = 0; k < tokenSequenceListForV1.length; k++) {
-      const imageSrc = SupportedTokens[k].icon;
-      imageSrcArray.push(imageSrc);
+    let create = [];
+
+    Object.keys(SupportedTokens).map((key) => {
+      const support = SupportedTokens[key];
+      create.push({
+        address: support.address,
+        icon: support.icon
+      });
+    });
+
+    for (k = 0; k < create.length; k++) {
+      const addresses = tokenSequenceListForV1[k];
+      if (addresses === create[i].address) {
+        console.log(true);
+      }
+      console.log(false);
     }
 
     return imageSrcArray;
@@ -83,11 +97,11 @@ export const usePoolData = () => {
     const getV1PoolData = await unifarmV1.methods
       .tokenDetails(selectedTokens.tokenAddress)
       .call();
-
+    const getSequence = await getSequenceImageSrc();
     return {
       poolName: selectedTokens.name,
       poolIcon: selectedTokens.icon,
-      rewardsSequenceSrc: [one, two, three, four, five],
+      rewardsSequenceSrc: getSequence,
       Apy: "42%",
       maxStakingLimit: library.utils.fromWei(getV1PoolData[3].toString()),
       network: "Ethereum",

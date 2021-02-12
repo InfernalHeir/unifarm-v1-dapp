@@ -101,7 +101,6 @@ function CalculotorRewards() {
       clearInterval(timer);
     };
   }, [day]);
-
   function approve() {
     setStep(1);
     setAprove(true);
@@ -130,6 +129,41 @@ function CalculotorRewards() {
           message: err.message
         });
       });
+  }, [selectedToken]);
+
+  const unifarmInstance = useUnifarmV2Contract();
+
+  useEffect(() => {
+    if (!unifarmInstance || !active || !account) return null;
+    console.log(selectedToken.tokenAddress);
+    if (
+      selectedToken.tokenAddress ===
+      "0xbe2845e7520223bfd6ab4e6f6ad4369f6ffa6e0e"
+    ) {
+      unifarmInstance.methods
+        .whiteListUserStatus(selectedToken.tokenAddress, account)
+        .call()
+        .then((result) => {
+          console.log(result);
+          if (!result) {
+            setError({
+              err: true,
+              message: "The Address you 're using is not Whitelisted."
+            });
+          } else {
+            setError({
+              err: false,
+              message: null
+            });
+          }
+        })
+        .catch((err) => {
+          setError({
+            err: true,
+            message: err.message
+          });
+        });
+    }
   }, [selectedToken]);
 
   const RenderDyanmicElement = () => {

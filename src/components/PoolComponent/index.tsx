@@ -2,6 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+const StyledPoolIcon = styled.img`
+  width: 30px;
+  margin-left: 5px;
+`;
+
+const StyledPoolName = styled.h5`
+  font-weight: 800;
+`;
+
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
   return (
     <div>
@@ -14,15 +23,13 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
                     style={{ backgroundColor: "white" }}
                   >
-                    <img src={item.poolIcon} alt={item.poolName} width="30" />
+                    <StyledPoolIcon src={item.poolIcon} alt={item.poolName} />
                     <br />
-                    <h6
-                      style={{ fontWeight: 800 }}
-                      className="btn scale btn_lg_primary1 br-10 effect-letter rounded-4"
-                    >
+                    <StyledPoolName className="btn scale btn_lg_primary1 br-10 effect-letter rounded-4">
                       {item.poolName}
-                    </h6>
+                    </StyledPoolName>
                   </div>
+
                   <div
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
                     style={{ backgroundColor: "white" }}
@@ -34,6 +41,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                     </div>
                   </div>
                 </div>
+
                 <div className="col-lg-9 mb-4 mt-0">
                   <div className="card p-3 reward-card-list total-stack-list2 box-shadow br-10 unstake_margin_top unstake_margin_top">
                     <div className="row">
@@ -56,27 +64,32 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                       <div>
                                         <b>Lock In</b>
                                         <br />
-                                        <span>{item.lockIn} Days</span>
+                                        <span>
+                                          {item.lockIn ? item.lockIn : "0"} Days
+                                        </span>
                                       </div>
                                     </div>
                                     <div className="col-md-4">
                                       <div>
                                         <b>Max Staking Limit</b>
                                         <br />
-                                        <span>{item.maxStakingLimit}</span>
+                                        <span>
+                                          {item.maxStakingLimit} Tokens
+                                        </span>
                                       </div>
                                     </div>
                                     <div className="col-md-4">
                                       <div>
                                         <b>Network</b>
                                         <br />
-                                        <span>{item.network}</span>
+                                        <span>View on {item.network}</span>
                                       </div>
                                     </div>
                                     {/* <div className="col-md-4"><div><b>Max Staking Limit</b><br/><span>1500</span></div></div><div className="col-md-4"><div><img src={one} width="20"/><br/><span>20 ORO</span></div></div>
                         <div className="col-md-4"><div><b>Network</b><br/><span>View On Etherurn</span></div></div>     */}
                                   </div>
                                 </div>
+
                                 <div className="col-lg-3 mt-3">
                                   <div>
                                     <div>
@@ -97,6 +110,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                 <div className="col-lg-5 mt-3">
                                   <div>
                                     <div className="d-flex">
+                                      {/*Here is start */}
                                       <div>
                                         <img width="20" />
                                         <p>
@@ -104,6 +118,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                         </p>
                                         <hr className="line" />
                                       </div>
+                                      {/*Here is start */}
                                       <div className="ml-3 ">
                                         <img width="20" className="ml-2" />
                                         <p>
@@ -112,37 +127,36 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                         <hr className="line" />
                                       </div>
                                     </div>
-                                    <div>
-                                      <span className="text-blink upcoming_reward">
-                                        <b>Upcomming Reward</b>
-                                      </span>
-                                    </div>
                                   </div>
+                                </div>
+
+                                {/*You can create new col*/}
+                                <div className="col-md-4 select-unstaike-button">
+                                  <Link
+                                    style={{
+                                      background: "transparent",
+                                      color: "#222"
+                                    }}
+                                    to={item.moreDetailsRoute}
+                                  >
+                                    More info
+                                  </Link>
+
+                                  <a
+                                    href="#"
+                                    className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
+                                    style={{
+                                      fontSize: 12
+                                    }}
+                                  >
+                                    Stake Now
+                                  </a>
                                 </div>
                               </div>
                             </div>
                             <div>
                               {/* <h6 className="pt-3">Days Staked: <b>10</b></h6> */}
                             </div>
-                          </div>
-                          <div className="col-md-12  text-lg-right select-unstaike-button">
-                            <Link
-                              style={{
-                                background: "transparent",
-                                color: "#222"
-                              }}
-                              to={item.moreDetailsRoute}
-                            >
-                              More info
-                            </Link>
-
-                            <a
-                              href="#"
-                              className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
-                              style={{ fontSize: 12, marginTop: -16 }}
-                            >
-                              Stake
-                            </a>
                           </div>
                         </div>
                       </div>

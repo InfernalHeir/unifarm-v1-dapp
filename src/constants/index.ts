@@ -36,7 +36,7 @@ export const WALLETS: IWallet = {
 };
 
 export const UnifarmV2Address: string =
-  "0xB3f9c22f8961902aa821F69B7624B2dbFD7E63D8";
+  "0xbE503EdD7f2eB46741547063DbDDB4C319647497";
 
 export const UnifarmV1Address: string =
   "0x4b99503776c8fEF57E89c58a2c0af25D16734934";
@@ -53,95 +53,9 @@ interface ISupportedTokens {
     v2?: boolean;
   };
 }
-export const SupportTokens = [
-  {
-    name: "ORO",
-    key: 0,
-    address: "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46",
-    icon: OROIcon,
-    decimals: 18,
-    type: "select",
-    v1: true,
-    v2: true
-  },
-  {
-    name: "MATIC",
-    key: 1,
-    address: "0xe98f9b3892229784ccc1fb9bf7f45c3579354118",
-    icon: MATICIcon,
-    decimals: 18,
-    type: "select",
-    v1: true,
-    v2: true
-  },
-  {
-    name: "REEF",
-    key: 2,
-    address: "0xccc3206cee685bbd62abcc37c99404d8ef0f23a7",
-    icon: ReefIcon,
-    decimals: 18,
-    type: "select",
-    v1: true,
-    v2: false
-  },
-  {
-    name: "CNTR",
-    key: 3,
-    address: "0xbd43847337b0558828ab6290599b20995b1367a8",
-    icon: CNTRIcon,
-    decimals: 18,
-    type: "select",
-    v1: true,
-    v2: false
-  },
-  {
-    name: "FRONT",
-    key: 4,
-    address: "0x5b11390207f723145a47dc4a6b69a2c5773ffb25",
-    icon: FrontIcon,
-    decimals: 18,
-    type: "select",
-    v1: true,
-    v2: false
-  },
-  {
-    name: "TVK",
-    key: 5,
-    address: "0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3",
-    icon: TVKIcon,
-    decimals: 18,
-    type: "select",
-    v1: false,
-    v2: true
-  },
-  {
-    name: "ROUTE",
-    key: 6,
-    address: "0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944",
-    icon: RouteICon,
-    decimals: 18,
-    type: "select",
-    v1: false,
-    v2: true
-  },
-  {
-    name: "NORD",
-    key: 8,
-    address: "0xaeffc06c5660f720c7644664d5e1be7dea41d5ae",
-    icon: NORD,
-    decimals: 18,
-    type: "select",
-    v1: false,
-    v2: true
-  },
-  {
-    name: "Request New Token",
-    key: 9,
-    type: "Request"
-  }
-];
+
 export const SupportedTokens: ISupportedTokens = {
-  0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46: {
+  ORO: {
     name: "ORO",
     key: 0,
     address: "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46",
@@ -151,7 +65,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: true
   },
-  0xe98f9b3892229784ccc1fb9bf7f45c3579354118: {
+  MATIC: {
     name: "MATIC",
     key: 1,
     address: "0xe98f9b3892229784ccc1fb9bf7f45c3579354118",
@@ -161,7 +75,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: true
   },
-  0xccc3206cee685bbd62abcc37c99404d8ef0f23a7: {
+  REEF: {
     name: "REEF",
     key: 2,
     address: "0xccc3206cee685bbd62abcc37c99404d8ef0f23a7",
@@ -171,7 +85,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  0xbd43847337b0558828ab6290599b20995b1367a8: {
+  CNTR: {
     name: "CNTR",
     key: 3,
     address: "0xbd43847337b0558828ab6290599b20995b1367a8",
@@ -181,7 +95,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  0x5b11390207f723145a47dc4a6b69a2c5773ffb25: {
+  FRONT: {
     name: "FRONT",
     key: 4,
     address: "0x5b11390207f723145a47dc4a6b69a2c5773ffb25",
@@ -191,40 +105,40 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3: {
+  TVK: {
     name: "TVK",
     key: 5,
-    address: "0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3",
+    address: "0xbe2845e7520223bfd6ab4e6f6ad4369f6ffa6e0e",
     icon: TVKIcon,
     decimals: 18,
     type: "select",
     v1: false,
     v2: true
   },
-  0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944: {
+  ROUTE: {
     name: "ROUTE",
     key: 6,
-    address: "0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944",
+    address: "0xb47f597260edbf30386aecc28938b25d5f0635b7",
     icon: RouteICon,
     decimals: 18,
     type: "select",
     v1: false,
     v2: true
   },
-  0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45: {
+  ZERO: {
     name: "ZERO",
     key: 7,
-    address: "0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45",
+    address: "0x3555209ff2933b548ee31646cb3ee201f41a2625",
     icon: ZERO,
     decimals: 18,
     type: "select",
     v1: false,
     v2: true
   },
-  0xaeffc06c5660f720c7644664d5e1be7dea41d5ae: {
+  NORD: {
     name: "NORD",
     key: 8,
-    address: "0xaeffc06c5660f720c7644664d5e1be7dea41d5ae",
+    address: "0xb596e98821c558860ec5d3d59460ea9e19a44f66",
     icon: NORD,
     decimals: 18,
     type: "select",
