@@ -14,6 +14,8 @@ import { setDailyRewardsDistrubution } from "../pools/action";
 import { formatEther } from "@ethersproject/units";
 import { useSetApplicationStatus } from "../app/hooks";
 import { useWeb3React } from "@web3-react/core";
+import { tokenAddressArrayV1 } from "../../constants";
+import { SupportedTokens } from "../../constants";
 
 export const usePoolData = () => {
   // unifarm contract instance.
@@ -32,6 +34,41 @@ export const usePoolData = () => {
   const dispatch = useDispatch();
 
   // getPoolInfo function
+
+  const getSequenceImageSrc = async () => {
+    // for v1
+    var tokenSequenceListForV1 = [];
+    var i;
+    for (i = 0; i < 5; i++) {
+      const tokenSequnence = await unifarmV1.methods
+        .tokensSequenceList(selectedTokens.tokenAddress, i)
+        .call();
+      console.log(tokenSequnence);
+      tokenSequenceListForV1.push(tokenSequnence);
+    }
+
+    let imageSrcArray = [];
+    let k;
+    for (k = 0; k < tokenSequenceListForV1.length; k++) {
+      const imageSrc = SupportedTokens[k].icon;
+      imageSrcArray.push(imageSrc);
+    }
+    return imageSrcArray;
+  };
+
+  const getSequenceListOfV2 = async () => {
+    // for v1
+    var tokenSequenceListForV2 = [];
+    var i;
+    for (i = 0; i < 6; i++) {
+      const tokenSequnence = await unifarmV2.methods
+        .tokensSequenceList(selectedTokens.tokenAddress, i)
+        .call();
+      tokenSequenceListForV2.push(tokenSequnence);
+    }
+    return tokenSequenceListForV2;
+  };
+
   const getPoolInfo = async () => {
     // before fire please enable loader
     // show for both pools
@@ -50,16 +87,22 @@ export const usePoolData = () => {
       // fetch the v1 data first
       var globalArray = [];
 
-      const v1Object = Object.create({
-        poolName: selectedTokens.name,
-        poolIcon: selectedTokens.icon,
-        rewardsSequenceSrc: [one, two, three, four, five],
-        Apy: 14,
-        maxStakingLimit: library.utils.fromWei(getV1PoolData[3].toString()),
-        network: "Ethreum",
-        moreDetailsRoute: "/stake",
-        isFired: true
-      });
+      const getImageSrc = await getSequenceImageSrc();
+
+      var v1 = {};
+      v1["poolName"] = selectedTokens.name;
+      v1["poolIcon"] = selectedTokens.icon;
+      v1["rewardsSequenceSrc"] = getImageSrc;
+      v1["Apy"] = 14;
+      v1["maxStakingLimit"] = library.utils.fromWei(
+        getV1PoolData[3].toString()
+      );
+      v1["rewardsSequenceSrc"] = getImageSrc;
+      v1["network"] = "View on Ethereum";
+      v1["moreDetailsRoute"] = "/stake";
+      v1["isFired"] = true;
+
+      console.log(v1);
 
       const v2Object = Object.create({
         poolName: selectedTokens.name,
@@ -73,8 +116,8 @@ export const usePoolData = () => {
         isFired: true
       });
 
-      globalArray.push(v1Object, v2Object);
-      console.log(globalArray);
+      globalArray.push(v1, v2Object);
+
       dispatch(
         setDailyRewardsDistrubution({
           fullfilled: true,
