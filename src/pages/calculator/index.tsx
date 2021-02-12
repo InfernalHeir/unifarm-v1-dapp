@@ -66,7 +66,7 @@ const Calculator = () => {
   const appState: any = useAppsStatus();
   const selectedCurrency: any = useSelectedTokens();
 
-  const { onInputChange, onCalculateRewards } = useOnChange();
+  const { onInputChange } = useOnChange();
 
   const { active, account } = useWeb3React();
 
@@ -99,6 +99,9 @@ const Calculator = () => {
           onChange={(e) => onInputChange(Number(e.target.value))}
           isDisable={!selectedCurrency.isSelected || !active}
           disabled={!selectedCurrency.isSelected || !active}
+          value={
+            selectedCurrency.stakingAmount && selectedCurrency.stakingAmount
+          }
         />
 
         <ShowMePools

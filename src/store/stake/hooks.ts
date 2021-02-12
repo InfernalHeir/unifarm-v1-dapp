@@ -36,12 +36,15 @@ export const useSelectedTokens = () => {
 
 export const useOnChange = () => {
   const state = useSelectedTokens();
+
   const {
     setAppError,
     setAppSuccess,
     setApploader
   } = useSetApplicationStatus();
+
   const { library, account } = useWeb3React();
+
   const getBalance = useFetchTokenBalance(state.tokenAddress);
   const dispatch = useDispatch();
 
@@ -62,10 +65,8 @@ export const useOnChange = () => {
     );
   };
 
-  // calculate rewards for user.
-  let selectedVersionUnifarm;
-
   const unifarmV1Instance = useUnifarmV1Contract();
+
   const unifarmV2Instance = useUnifarmV2Contract();
 
   const onCalculateRewards = async () => {

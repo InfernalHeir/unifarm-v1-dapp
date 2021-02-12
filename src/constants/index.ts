@@ -42,7 +42,7 @@ export const UnifarmV1Address: string =
   "0x4b99503776c8fEF57E89c58a2c0af25D16734934";
 
 interface ISupportedTokens {
-  [index: number]: {
+  [tokenAddress: string]: {
     name: string;
     key: number;
     address?: string;
@@ -53,8 +53,8 @@ interface ISupportedTokens {
     v2?: boolean;
   };
 }
-export const SupportedTokens: ISupportedTokens = {
-  0: {
+export const SupportTokens = [
+  {
     name: "ORO",
     key: 0,
     address: "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46",
@@ -64,7 +64,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: true
   },
-  1: {
+  {
     name: "MATIC",
     key: 1,
     address: "0xe98f9b3892229784ccc1fb9bf7f45c3579354118",
@@ -74,7 +74,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: true
   },
-  2: {
+  {
     name: "REEF",
     key: 2,
     address: "0xccc3206cee685bbd62abcc37c99404d8ef0f23a7",
@@ -84,7 +84,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  3: {
+  {
     name: "CNTR",
     key: 3,
     address: "0xbd43847337b0558828ab6290599b20995b1367a8",
@@ -94,7 +94,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  4: {
+  {
     name: "FRONT",
     key: 4,
     address: "0x5b11390207f723145a47dc4a6b69a2c5773ffb25",
@@ -104,7 +104,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: true,
     v2: false
   },
-  5: {
+  {
     name: "TVK",
     key: 5,
     address: "0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3",
@@ -114,7 +114,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: false,
     v2: true
   },
-  6: {
+  {
     name: "ROUTE",
     key: 6,
     address: "0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944",
@@ -124,17 +124,7 @@ export const SupportedTokens: ISupportedTokens = {
     v1: false,
     v2: true
   },
-  7: {
-    name: "ZERO",
-    key: 7,
-    address: "0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45",
-    icon: ZERO,
-    decimals: 18,
-    type: "select",
-    v1: false,
-    v2: true
-  },
-  8: {
+  {
     name: "NORD",
     key: 8,
     address: "0xaeffc06c5660f720c7644664d5e1be7dea41d5ae",
@@ -144,7 +134,104 @@ export const SupportedTokens: ISupportedTokens = {
     v1: false,
     v2: true
   },
-  9: {
+  {
+    name: "Request New Token",
+    key: 9,
+    type: "Request"
+  }
+];
+export const SupportedTokens: ISupportedTokens = {
+  0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46: {
+    name: "ORO",
+    key: 0,
+    address: "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46",
+    icon: OROIcon,
+    decimals: 18,
+    type: "select",
+    v1: true,
+    v2: true
+  },
+  0xe98f9b3892229784ccc1fb9bf7f45c3579354118: {
+    name: "MATIC",
+    key: 1,
+    address: "0xe98f9b3892229784ccc1fb9bf7f45c3579354118",
+    icon: MATICIcon,
+    decimals: 18,
+    type: "select",
+    v1: true,
+    v2: true
+  },
+  0xccc3206cee685bbd62abcc37c99404d8ef0f23a7: {
+    name: "REEF",
+    key: 2,
+    address: "0xccc3206cee685bbd62abcc37c99404d8ef0f23a7",
+    icon: ReefIcon,
+    decimals: 18,
+    type: "select",
+    v1: true,
+    v2: false
+  },
+  0xbd43847337b0558828ab6290599b20995b1367a8: {
+    name: "CNTR",
+    key: 3,
+    address: "0xbd43847337b0558828ab6290599b20995b1367a8",
+    icon: CNTRIcon,
+    decimals: 18,
+    type: "select",
+    v1: true,
+    v2: false
+  },
+  0x5b11390207f723145a47dc4a6b69a2c5773ffb25: {
+    name: "FRONT",
+    key: 4,
+    address: "0x5b11390207f723145a47dc4a6b69a2c5773ffb25",
+    icon: FrontIcon,
+    decimals: 18,
+    type: "select",
+    v1: true,
+    v2: false
+  },
+  0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3: {
+    name: "TVK",
+    key: 5,
+    address: "0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3",
+    icon: TVKIcon,
+    decimals: 18,
+    type: "select",
+    v1: false,
+    v2: true
+  },
+  0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944: {
+    name: "ROUTE",
+    key: 6,
+    address: "0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944",
+    icon: RouteICon,
+    decimals: 18,
+    type: "select",
+    v1: false,
+    v2: true
+  },
+  0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45: {
+    name: "ZERO",
+    key: 7,
+    address: "0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45",
+    icon: ZERO,
+    decimals: 18,
+    type: "select",
+    v1: false,
+    v2: true
+  },
+  0xaeffc06c5660f720c7644664d5e1be7dea41d5ae: {
+    name: "NORD",
+    key: 8,
+    address: "0xaeffc06c5660f720c7644664d5e1be7dea41d5ae",
+    icon: NORD,
+    decimals: 18,
+    type: "select",
+    v1: false,
+    v2: true
+  },
+  REQUEST: {
     name: "Request New Token",
     key: 9,
     type: "Request"
@@ -169,4 +256,16 @@ export const tokenAddressArrayV2 = {
   ROUTE: "0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944",
   ZEROSWAP: "0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45",
   NORD: "0xaeffc06c5660f720c7644664d5e1be7dea41d5ae"
+};
+
+export const tokenAddressSrcMAapping = {
+  0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46: OROIcon,
+  0xe98f9b3892229784ccc1fb9bf7f45c3579354118: MATICIcon,
+  0xccc3206cee685bbd62abcc37c99404d8ef0f23a7: ReefIcon,
+  0xbd43847337b0558828ab6290599b20995b1367a8: CNTRIcon,
+  0x5b11390207f723145a47dc4a6b69a2c5773ffb25: FrontIcon,
+  0x7b2751fa2559ac5322cc38fe2ee306d25546c3f3: TVKIcon,
+  0xb710c0edc2b3a2cf7413f31ab281f5c2cd8b4944: RouteICon,
+  0x8c443d30faf3d7ac5bfa04862493f8c07ac76c45: ZERO,
+  0xaeffc06c5660f720c7644664d5e1be7dea41d5ae: NORD
 };

@@ -101,6 +101,7 @@ function CalculotorRewards() {
       clearInterval(timer);
     };
   }, [day]);
+
   function approve() {
     setStep(1);
     setAprove(true);
@@ -121,34 +122,6 @@ function CalculotorRewards() {
         if (selectedToken.stakingAmount > etherAmount) {
           setAprove(false);
           setStack(true);
-        }
-      })
-      .catch((err) => {
-        setError({
-          err: true,
-          message: err.message
-        });
-      });
-  }, [selectedToken]);
-
-  const unifarmInstance = useUnifarmV2Contract();
-
-  useEffect(() => {
-    if (!unifarmInstance || !active || !account) return null;
-    unifarmInstance.methods
-      .whiteList(account)
-      .call()
-      .then((result) => {
-        if (!result) {
-          setError({
-            err: true,
-            message: "The Address you 're using is not Whitelisted."
-          });
-        } else {
-          setError({
-            err: false,
-            message: null
-          });
         }
       })
       .catch((err) => {

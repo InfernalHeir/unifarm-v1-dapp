@@ -43,16 +43,17 @@ export const usePoolData = () => {
       const tokenSequnence = await unifarmV1.methods
         .tokensSequenceList(selectedTokens.tokenAddress, i)
         .call();
-      console.log(tokenSequnence);
       tokenSequenceListForV1.push(tokenSequnence);
     }
 
     let imageSrcArray = [];
     let k;
+
     for (k = 0; k < tokenSequenceListForV1.length; k++) {
       const imageSrc = SupportedTokens[k].icon;
       imageSrcArray.push(imageSrc);
     }
+
     return imageSrcArray;
   };
 
@@ -66,7 +67,51 @@ export const usePoolData = () => {
         .call();
       tokenSequenceListForV2.push(tokenSequnence);
     }
-    return tokenSequenceListForV2;
+
+    let imageSrcArray = [];
+    let k;
+
+    for (k = 0; k < tokenSequenceListForV2.length; k++) {
+      const imageSrc = SupportedTokens[k].icon;
+      imageSrcArray.push(imageSrc);
+    }
+
+    return imageSrcArray;
+  };
+
+  const getPoolV1DataByOnce = async () => {
+    const getV1PoolData = await unifarmV1.methods
+      .tokenDetails(selectedTokens.tokenAddress)
+      .call();
+
+    return {
+      poolName: selectedTokens.name,
+      poolIcon: selectedTokens.icon,
+      rewardsSequenceSrc: [one, two, three, four, five],
+      Apy: "42%",
+      maxStakingLimit: library.utils.fromWei(getV1PoolData[3].toString()),
+      network: "Ethereum",
+      moreDetailsRoute: "/stake",
+      isFired: true
+    };
+  };
+
+  const getPoolV2DataByOnce = async () => {
+    const getV2PoolData = await unifarmV2.methods
+      .tokenDetails(selectedTokens.tokenAddress)
+      .call();
+
+    return {
+      poolName: selectedTokens.name,
+      poolIcon: selectedTokens.icon,
+      rewardsSequenceSrc: [one, two, three, four, five],
+      Apy: "42%",
+      lockIn: getV2PoolData[4],
+      maxStakingLimit: library.utils.fromWei(getV2PoolData[4].toString()),
+      network: "Ethereum",
+      moreDetailsRoute: "/stake",
+      isFired: true
+    };
   };
 
   const getPoolInfo = async () => {
@@ -74,49 +119,13 @@ export const usePoolData = () => {
     // show for both pools
     setApploader(true);
 
-    const getV1PoolData = await unifarmV1.methods
-      .tokenDetails(selectedTokens.tokenAddress)
-      .call();
-
-    // get the v2 data then
-    const getV2PoolData = await unifarmV2.methods
-      .tokenDetails(selectedTokens.tokenAddress)
-      .call();
-
     if (selectedTokens.v1 && selectedTokens.v2) {
       // fetch the v1 data first
       var globalArray = [];
+      const fetchPool1Data = await getPoolV1DataByOnce();
+      const fetchPool2Data = await getPoolV2DataByOnce();
 
-      const getImageSrc = await getSequenceImageSrc();
-
-      var v1 = {};
-      v1["poolName"] = selectedTokens.name;
-      v1["poolIcon"] = selectedTokens.icon;
-      v1["rewardsSequenceSrc"] = getImageSrc;
-      v1["Apy"] = 14;
-      v1["maxStakingLimit"] = library.utils.fromWei(
-        getV1PoolData[3].toString()
-      );
-      v1["rewardsSequenceSrc"] = getImageSrc;
-      v1["network"] = "View on Ethereum";
-      v1["moreDetailsRoute"] = "/stake";
-      v1["isFired"] = true;
-
-      console.log(v1);
-
-      const v2Object = Object.create({
-        poolName: selectedTokens.name,
-        poolIcon: selectedTokens.icon,
-        rewardsSequenceSrc: [one, two, three, four, five],
-        Apy: 14,
-        lockIn: getV2PoolData[4],
-        maxStakingLimit: library.utils.fromWei(getV2PoolData[2]),
-        network: "Ethreum",
-        moreDetailsRoute: "/stake",
-        isFired: true
-      });
-
-      globalArray.push(v1, v2Object);
+      globalArray.push(fetchPool1Data, fetchPool2Data);
 
       dispatch(
         setDailyRewardsDistrubution({
@@ -124,21 +133,14 @@ export const usePoolData = () => {
           poolData: globalArray
         })
       );
+
       setApploader(false);
     } else if (selectedTokens.v1) {
       var globalArray = [];
-      const v1Object = Object.create({
-        poolName: selectedTokens.name,
-        poolIcon: selectedTokens.icon,
-        rewardsSequenceSrc: [one, two, three, four, five],
-        Apy: 14,
-        lockIn: getV1PoolData[4].toString(),
-        maxStakingLimit: library.utils.fromWei(getV1PoolData[2]),
-        network: "Ethreum",
-        moreDetailsRoute: "/stake",
-        isFired: true
-      });
-      globalArray.push(v1Object);
+
+      const fetchPool1Data = await getPoolV1DataByOnce();
+
+      globalArray.push(fetchPool1Data);
 
       dispatch(
         setDailyRewardsDistrubution({
@@ -146,28 +148,22 @@ export const usePoolData = () => {
           poolData: globalArray
         })
       );
+
       setApploader(false);
     } else if (selectedTokens.v2) {
       var globalArray = [];
-      const v2Object = Object.create({
-        poolName: selectedTokens.name,
-        poolIcon: selectedTokens.icon,
-        rewardsSequenceSrc: [one, two, three, four, five],
-        Apy: 14,
-        lockIn: getV2PoolData[4].toString(),
-        maxStakingLimit: library.utils.fromWei(getV2PoolData[2]),
-        network: "Ethreum",
-        moreDetailsRoute: "/stake",
-        isFired: true
-      });
 
-      globalArray.push(v2Object);
+      const fetchPool2Data = await getPoolV2DataByOnce();
+
+      globalArray.push(fetchPool2Data);
+
       dispatch(
         setDailyRewardsDistrubution({
           fullfilled: true,
           poolData: globalArray
         })
       );
+
       setApploader(false);
     }
   };
