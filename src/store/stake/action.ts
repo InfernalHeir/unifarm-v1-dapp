@@ -1,11 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
 
-export const setStakingDetails = createAction<{
+export const setTokenDetails = createAction<{
   decimals: number;
   tokenAddress?: string;
   name: string;
   icon: string;
   isSelected?: boolean;
+  v1: boolean;
+  v2: boolean;
 }>("stake/setStakingDetails");
 
 export const TypeInput = createAction<{ stakingAmount: number }>(

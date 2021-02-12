@@ -7,8 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import { AiOutlineClose } from "react-icons/ai";
 import IconButton from "@material-ui/core/IconButton";
 import { SupportedTokens } from "../../constants/index";
-import { useDispatch } from "react-redux";
-import { setStakingDetails } from "../../store/stake/action";
+import { useSetTokenDetails } from "../../store/stake/hooks";
 
 interface ITokenSearchModal {
   isOpen: boolean;
@@ -48,25 +47,7 @@ const FlexHeader = styled.div`
 `;
 
 const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
-  const dispatch = useDispatch();
-
-  const SelectTokens = useCallback(
-    (icon, name, isSelected, tokenAddress) => {
-      dispatch(
-        setStakingDetails({
-          icon,
-          name,
-          isSelected,
-          tokenAddress,
-          decimals: 18
-        })
-      );
-
-      // close this modal
-      close();
-    },
-    [dispatch]
-  );
+  const { setSelectedTokenDetails } = useSetTokenDetails();
 
   return (
     <Modal isOpen={isOpen} close={close}>
@@ -78,25 +59,31 @@ const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
       </FlexHeader>
       <Divider />
       {Object.keys(SupportedTokens).map((key) => {
-        const support = SupportedTokens[key];
+        const token = SupportedTokens[key];
         return (
-          <List>
+          <List key={token.key}>
             <ListItemWrapper
               isSelected={false}
               onClick={() => {
-                return SelectTokens(
-                  support.icon,
-                  support.name,
-                  true,
-                  support.address
+                return (
+                  setSelectedTokenDetails({
+                    decimals: token.decimals,
+                    tokenAddress: token.address,
+                    name: token.name,
+                    icon: token.icon,
+                    isSelected: true,
+                    v1: token.v1,
+                    v2: token.v2
+                  }),
+                  close()
                 );
               }}
             >
-              {support.icon && (
-                <StyledChainIcon src={support.icon} alt={support.name} />
+              {token.icon && (
+                <StyledChainIcon src={token.icon} alt={token.name} />
               )}
 
-              <StyledChainName>{support.name}</StyledChainName>
+              <StyledChainName>{token.name}</StyledChainName>
             </ListItemWrapper>
           </List>
         );

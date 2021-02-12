@@ -1154,3 +1154,7 @@ input[type="number"] {
   color: #222;
   font-weight: 800;
 }
+.approved-button {
+  background: #4bb543;
+  color: #fff;
+}

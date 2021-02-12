@@ -12,9 +12,9 @@ import styled from "styled-components";
 import useTokenContract, {
   useUnifarmV2Contract
 } from "../../hooks/useTokenContract";
-import { useSelectedTokens } from "../../store/stake/hooks";
+import { useOnChange, useSelectedTokens } from "../../store/stake/hooks";
 import { useWeb3React } from "@web3-react/core";
-import { UnifarmTokenAddress } from "../../constants";
+import { UnifarmV2Address } from "../../constants";
 import { formatEther, parseUnits } from "@ethersproject/units";
 import { Redirect } from "react-router-dom";
 import { isAddress } from "@ethersproject/address";
@@ -83,6 +83,8 @@ function CalculotorRewards() {
     message: null
   });
 
+  const { onApprove, onStake } = useOnChange();
+
   useEffect(() => {
     const timer = setInterval(() => {
       setDay((day) => day + 1);
@@ -112,13 +114,14 @@ function CalculotorRewards() {
   useEffect(() => {
     if (!instance || !active || !account) return null;
     instance.methods
-      .allowance(account, UnifarmTokenAddress)
+      .allowance(account, UnifarmV2Address)
       .call()
       .then((result) => {
         const etherAmount = library.utils.fromWei(result.toString());
         console.log(etherAmount);
         if (selectedToken.stakingAmount > etherAmount) {
-          setAprove(true);
+          //setAprove(true);
+          setStack(true);
         }
       })
       .catch((err) => {
@@ -163,7 +166,7 @@ function CalculotorRewards() {
       const parseTokens = library.utils.toWei(
         selectedToken.stakingAmount.toString()
       );
-      await instance.methods.approve(UnifarmTokenAddress, parseTokens).send({
+      await instance.methods.approve(UnifarmV2Address, parseTokens).send({
         from: account
       });
       // dispatch applciation success here.
@@ -188,22 +191,20 @@ function CalculotorRewards() {
         .tokenDetails(selectedToken.tokenAddress)
         .call();
       const useMaxStake = tokenDetails[2];
-      if (amount > useMaxStake) {
-        alert("You are Cross the user max Limit");
-        return null;
-      } else {
-        await unifarmInstance.methods.stake(refer, account, amount).send({
-          from: account
-        });
 
-        return (
-          <Redirect
-            to={{
-              pathname: "/staking-history"
-            }}
-          />
-        );
-      }
+      const etherValuesMAx = library.utils.fromWei(useMaxStake);
+
+      await unifarmInstance.methods.stake(refer, account, amount).send({
+        from: account
+      });
+
+      return (
+        <Redirect
+          to={{
+            pathname: "/staking-history"
+          }}
+        />
+      );
     } catch (err) {
       return null;
     }
@@ -223,9 +224,9 @@ function CalculotorRewards() {
             >
               <CircularProgress style={{ color: "#fff" }} />
             </button>
-          ) : aprove ? (
+          ) : !aprove ? (
             <button
-              onClick={ApproveCallback}
+              onClick={() => onApprove("v1")}
               className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
               disabled={stack}
             >
@@ -244,7 +245,7 @@ function CalculotorRewards() {
             <button
               //to="/Balance5"
               className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white rounded-4 ml-4 link-btn btn-hover btn-approved"
-              onClick={StakeCallback}
+              onClick={() => onStake("v1")}
             >
               Stake
               <span>

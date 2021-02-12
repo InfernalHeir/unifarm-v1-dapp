@@ -16,7 +16,7 @@ import { useModalChecker } from "../../store/app/hooks";
 import Divider from "@material-ui/core/Divider";
 import { useCloseModal } from "../../store/app/hooks";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useSetApplicationError } from "../../store/app/hooks";
+import { useSetApplicationStatus } from "../../store/app/hooks";
 
 export const ProviderLogo = styled.img`
   width: 30px;
@@ -67,6 +67,8 @@ const Web3Modal = () => {
 
   const close = useCloseModal();
 
+  const { setAppError }: any = useSetApplicationStatus();
+
   const tryActivating = async (connector: AbstractConnector) => {
     // activate the connector
     try {
@@ -76,7 +78,7 @@ const Web3Modal = () => {
       // then close the modal
       close();
     } catch (err) {
-      useSetApplicationError(err);
+      setAppError(true, err);
       close();
     }
   };

@@ -8,8 +8,7 @@ import { ShowMePools } from "../../components/Buttons";
 import { useWeb3React } from "@web3-react/core";
 import CalculatorRewards from "../../components/CalculotorRewards";
 import { useOnChange, useSelectedTokens } from "../../store/stake/hooks";
-import { AppState } from "../../store";
-import { useSelector } from "react-redux";
+import { useAppsStatus } from "../../store/app/hooks";
 
 const CalculatorWrapper = styled.div`
   max-width: 550px;
@@ -61,14 +60,16 @@ export const TokenLogo = styled.img`
 
 const Calculator = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
+
   const [showCalculotor, setShowCalculotor] = useState<boolean>(false);
 
-  const state: any = useSelector<AppState>((state) => state.app);
-
+  const appState: any = useAppsStatus();
   const selectedCurrency: any = useSelectedTokens();
 
-  const { onInputChange }: any = useOnChange();
-  const { active } = useWeb3React();
+  const { onInputChange, onCalculateRewards } = useOnChange();
+
+  const { active, account } = useWeb3React();
+
   const close = () => {
     setOpen(false);
   };
@@ -96,21 +97,22 @@ const Calculator = () => {
         <StyledInput
           placeholder="No of Tokens to Stake"
           onChange={(e) => onInputChange(Number(e.target.value))}
-          isDisable={!selectedCurrency.isSelected}
+          isDisable={!selectedCurrency.isSelected || !active}
+          disabled={!selectedCurrency.isSelected || !active}
         />
 
         <ShowMePools
           disabled={
-            !active || !state.appStatus || !selectedCurrency.stakingAmount
+            !active || appState.appError || !selectedCurrency.stakingAmount
           }
           isDisable={
-            !active || !state.appStatus || !selectedCurrency.stakingAmount
+            !active || appState.appError || !selectedCurrency.stakingAmount
           }
           onClick={() => setShowCalculotor(true)}
         >
-          {!state.appStatus ? (
-            state.message
-          ) : active ? (
+          {appState.appError ? (
+            appState.message
+          ) : active && account ? (
             <>Calculate Yield</>
           ) : (
             <>Connect Wallet</>

@@ -7,7 +7,7 @@ import { formatEther } from "@ethersproject/units";
 const useUserMaxStake = (tokenAddress: string): any => {
   const [isUserMaxStake, setMaxStakeValue] = useState<string | boolean>(false);
 
-  const { active, account } = useWeb3React();
+  const { active } = useWeb3React();
 
   const instance = useUnifarmV2Contract();
 

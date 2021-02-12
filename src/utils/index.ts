@@ -4,6 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { injected } from "../connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import MetamaskLogo from "../assests/images/metamask.png";
+import { UnifarmV1Address, UnifarmV2Address } from "../constants";
 
 export const validateAddress = (address: string): string | false => {
   try {
@@ -34,4 +35,11 @@ export const getConnectorLogo = (connector: AbstractConnector): string => {
     return MetamaskLogo;
   }
   return null;
+};
+
+export const getExactAddress = (TypeFor: string) => {
+  if (TypeFor === "v1") {
+    return UnifarmV1Address;
+  }
+  return UnifarmV2Address;
 };

@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { setStakingDetails, TypeInput } from "./action";
+import { setTokenDetails, TypeInput } from "./action";
 
 export interface IStakeInfo {
   stakingAmount?: number;
@@ -8,6 +8,8 @@ export interface IStakeInfo {
   icon: string | null;
   name: string | null;
   isSelected?: boolean;
+  v1: boolean;
+  v2: boolean;
 }
 
 const initialStateOfStake: IStakeInfo = {
@@ -16,17 +18,19 @@ const initialStateOfStake: IStakeInfo = {
   tokenAddress: null,
   icon: null,
   name: null,
-  isSelected: false
+  isSelected: false,
+  v1: false,
+  v2: false
 };
 
 export const stakeReducer = createReducer<IStakeInfo>(
   initialStateOfStake,
   (builder) => {
     builder.addCase(
-      setStakingDetails,
+      setTokenDetails,
       (
         state,
-        { payload: { icon, name, decimals, isSelected, tokenAddress } }
+        { payload: { icon, name, decimals, isSelected, tokenAddress, v1, v2 } }
       ) => {
         return {
           ...state,
@@ -34,7 +38,9 @@ export const stakeReducer = createReducer<IStakeInfo>(
           name,
           decimals,
           isSelected,
-          tokenAddress
+          tokenAddress,
+          v1,
+          v2
         };
       }
     ),

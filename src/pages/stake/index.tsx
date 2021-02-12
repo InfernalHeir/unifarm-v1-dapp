@@ -49,15 +49,13 @@ const Stake = () => {
 
         {active ? (
           <ShowMePools
-            disabled={
-              !active || !state.appStatus || !selectedToken.stakingAmount
-            }
+            disabled={!active || state.appError || !selectedToken.stakingAmount}
             isDisable={
-              !active || !state.appStatus || !selectedToken.stakingAmount
+              !active || state.appSuccess || !selectedToken.stakingAmount
             }
             onClick={() => getPoolInfo()}
           >
-            {!state.appStatus ? (
+            {state.appError ? (
               state.message
             ) : (
               <>
