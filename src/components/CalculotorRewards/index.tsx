@@ -73,7 +73,7 @@ function CalculotorRewards() {
   const [value, setValue] = useState(0);
   const [step, setStep] = useState(0);
   const [stack, setStack] = useState(false);
-  const [aprove, setAprove] = useState(false);
+  const [aprove, setAprove] = useState(true);
   const [btnDisabled, setbtnDisabled] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -118,9 +118,8 @@ function CalculotorRewards() {
       .call()
       .then((result) => {
         const etherAmount = library.utils.fromWei(result.toString());
-        console.log(etherAmount);
         if (selectedToken.stakingAmount > etherAmount) {
-          //setAprove(true);
+          setAprove(false);
           setStack(true);
         }
       })
@@ -160,56 +159,6 @@ function CalculotorRewards() {
       });
   }, [selectedToken]);
 
-  const ApproveCallback = async () => {
-    try {
-      setLoading(true);
-      const parseTokens = library.utils.toWei(
-        selectedToken.stakingAmount.toString()
-      );
-      await instance.methods.approve(UnifarmV2Address, parseTokens).send({
-        from: account
-      });
-      // dispatch applciation success here.
-      alert("Approved Sucessfully");
-      setLoading(false);
-      setStack(true);
-    } catch (err) {
-      // dispatch an application error.
-      alert(err.message);
-      setLoading(false);
-    }
-  };
-
-  const StakeCallback = async () => {
-    const stakeAmount = selectedToken.stakingAmount;
-    // but first we have to check referal address
-    const amount = library.utils.toWei(stakeAmount.toString());
-
-    const refer = "0xF6C172dd45ABd82E1F067801B309A7fFC4977971";
-    try {
-      const tokenDetails = await unifarmInstance.methods
-        .tokenDetails(selectedToken.tokenAddress)
-        .call();
-      const useMaxStake = tokenDetails[2];
-
-      const etherValuesMAx = library.utils.fromWei(useMaxStake);
-
-      await unifarmInstance.methods.stake(refer, account, amount).send({
-        from: account
-      });
-
-      return (
-        <Redirect
-          to={{
-            pathname: "/staking-history"
-          }}
-        />
-      );
-    } catch (err) {
-      return null;
-    }
-  };
-
   const RenderDyanmicElement = () => {
     if (error.err) {
       return <StyledAlert>{error.message}</StyledAlert>;
@@ -224,10 +173,14 @@ function CalculotorRewards() {
             >
               <CircularProgress style={{ color: "#fff" }} />
             </button>
-          ) : !aprove ? (
+          ) : aprove ? (
             <button
               onClick={() => onApprove("v1")}
-              className="btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
+              className={
+                aprove
+                  ? "approved-button"
+                  : "btn btn_sm_primary br-10 bg-dark-purple approve-btn c-white btn-not-allowed rounded-4 link-btn btn-hover btn-approved"
+              }
               disabled={stack}
             >
               Approve

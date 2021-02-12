@@ -40,10 +40,7 @@ const AppBody = ({
                       {shortenAddress(account)}
                     </AccountDetails>
                     <ButtonGroup>
-                      <Link to="/staking-info">My Rewards</Link>
-                      <MyStakesRewards isMyStakes={true}>
-                        My Refferal
-                      </MyStakesRewards>
+                      <Link to="/staking-info">My Stakes</Link>
                     </ButtonGroup>
                   </>
                 ) : (
