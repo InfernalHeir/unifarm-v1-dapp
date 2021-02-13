@@ -36,10 +36,10 @@ export const WALLETS: IWallet = {
 }
 
 export const UnifarmV2Address: string =
-  '0x80B2f47a644B7bc7f363320047BC7a7B10e05324'
+  '0xa906819449f6841c63163f5289469d8b9bdd591c'
 
 export const UnifarmV1Address: string =
-  '0x4b99503776c8fef57e89c58a2c0af25d16734934'
+  '0x18192dcf14ee5a071d0fc79779cdfb3ce98e3f74'
 
 interface ISupportedTokens {
   [tokenAddress: string]: {

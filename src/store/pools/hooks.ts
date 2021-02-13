@@ -40,6 +40,7 @@ export const useResetData = () => {
     return state.poolReducer
   })
 }
+
 const getImagebyIndex = (object: any, address: string) => {
   var key
   for (var prop in object) {
@@ -301,6 +302,8 @@ export const usePoolData = () => {
   const getPoolInfo = async () => {
     // before fire please enable loader
     // show for both pools
+    if (!selectedTokens.stakingAmount || !selectedTokens.tokenAddress)
+      return null
     setApploader(true)
 
     if (selectedTokens.v1 && selectedTokens.v2) {

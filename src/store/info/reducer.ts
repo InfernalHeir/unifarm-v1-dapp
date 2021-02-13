@@ -1,8 +1,7 @@
-import { createReducer } from "@reduxjs/toolkit"
-import { setUserStakingDetails } from "./actions"
+import { createReducer } from '@reduxjs/toolkit'
+import { setUserStakingDetails } from './actions'
 
 export interface StakeInfoData {
-  stakeLoader: boolean
   Mystakes: number
   DaysStaked: number[]
   poolName?: string

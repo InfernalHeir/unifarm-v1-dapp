@@ -502,12 +502,12 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  font-family: "CircularStd", sans-serif;
+  font-family: 'CircularStd', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 body::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -522,7 +522,7 @@ body::before {
 }
 
 code {
-  font-family: "CircularStd", sans-serif;
+  font-family: 'CircularStd', sans-serif;
 }
 .Claimed {
   color: #7bd88a !important;
@@ -806,8 +806,8 @@ span.label.label-primary {
   width: 240px;
   height: 72px;
   border-radius: 80px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 14px;
   text-align: center;
   line-height: 70px;
@@ -1142,7 +1142,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -1157,4 +1157,44 @@ input[type="number"] {
 .approved-button {
   background: #4bb543;
   color: #fff;
+}
+
+.button1 {
+  font-weight: 300;
+  color: #fff;
+  font-size: 1.2em;
+  text-decoration: none;
+  /* border: 1px solid #efefef; */
+  padding: 0.5em;
+  border-radius: 10px;
+  float: left;
+  margin: 0em 0 0 -155px;
+  left: 66%;
+  position: relative;
+  transition: all 0.3s linear;
+  background-color: #007aff !important;
+  width: 61%;
+  /* height: 100%; */
+}
+.button1:hover {
+  background-color: #007aff;
+  color: #fff;
+}
+
+.p-notfound {
+  font-size: 2em;
+  text-align: center;
+  font-weight: 100;
+}
+.h1-notfound {
+  min-height: 1rem;
+  font-size: 14rem;
+  color: white;
+}
+@media (max-width: 767px) {
+  .h1-notfound {
+    min-height: 1rem;
+    font-size: 14rem;
+    color: white;
+  }
 }
