@@ -29,10 +29,10 @@ import { AppState } from '..'
 
 export const useResetPool = () => {
   const dispatch = useDispatch()
-  const setReset = (bool: boolean) => {
+  const setResetPool = (bool: any) => {
     return dispatch(setReset(bool))
   }
-  return setReset
+  return setResetPool
 }
 
 export const useResetData = () => {
@@ -107,7 +107,7 @@ export const usePoolData = () => {
 
   const getV2Rewards = async () => {
     try {
-      const selectedTokenRewardByOtherV2 = []
+      const selectedTokenRewardByOtherV1 = []
 
       for (const key in tokensSequenceListPool) {
         const tokens = library.utils.toWei(
@@ -136,9 +136,9 @@ export const usePoolData = () => {
           ? getOneDay * tokensReward
           : '0'
 
-        selectedTokenRewardByOtherV2.push(perDayTokensRewards)
+        selectedTokenRewardByOtherV1.push(perDayTokensRewards)
       }
-      return { selectedTokenRewardByOtherV2 }
+      return { selectedTokenRewardByOtherV1 }
     } catch (err) {
       alert(err.message)
     }
@@ -200,7 +200,7 @@ export const usePoolData = () => {
       let tokenRewardsName = []
       let k
 
-      const { selectedTokenRewardByOtherV2 } = await getV2Rewards()
+      const { selectedTokenRewardByOtherV1 } = await getV2Rewards()
 
       Object.keys(SupportedTokens).map((key, index) => {
         const tokenAddressSequence = tokenSequenceListForV2[index]
@@ -216,7 +216,7 @@ export const usePoolData = () => {
         var support = SupportedTokens[k]
         console.log(support)
       }
-      return { selectedTokenRewardByOtherV2 }
+      return { selectedTokenRewardByOtherV1 }
     } catch (err) {
       console.log(err.message)
     }
@@ -279,7 +279,7 @@ export const usePoolData = () => {
         .tokenDetails(selectedTokens.tokenAddress)
         .call()
 
-      const selectedTokenRewardByOtherV2 = await getSequenceImageSrcV2()
+      const selectedTokenRewardByOtherV1 = await getSequenceImageSrcV2()
 
       return {
         poolName: selectedTokens.name,
@@ -292,7 +292,7 @@ export const usePoolData = () => {
         moreDetailsRoute: '/stake',
         isFired: true,
         typeFor: 'v2',
-        rewards: selectedTokenRewardByOtherV2
+        rewards: selectedTokenRewardByOtherV1
       }
     } catch (err) {
       console.log(err.message)

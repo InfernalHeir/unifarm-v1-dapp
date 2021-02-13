@@ -12,25 +12,29 @@ import { useSetApplicationStatus } from '../app/hooks'
 
 const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
   if (!account || !unifarmV1) return null
-
   try {
+    var v1PoolData = []
     // tokenNames
     const tokenNames = []
     // render Object Final Output.
-    const renderObject = []
+    const Mystakes = []
     // unifarmV1 view Staking Details.
+
     const stakeDetails = await unifarmV1.methods
       .viewStakingDetails(account)
       .call()
+
     // staking details.
     // it also array.
+
     const tokenAddress = stakeDetails[0]
     const isActive = stakeDetails[1]
     const stakeIDs = stakeDetails[2]
-    const stakeAmount = stakeDetails[3]
-    const startTime = stakeDetails[4]
+    const stakedAmount = stakeDetails[3]
+    const DaysStaked = stakeDetails[4]
 
-    // this
+    // this get poolName and Poolimages from token sequnces
+
     const sequenceListEveryStake = {}
     const rewardEachStake = {}
     const sequenceListImages = {}
@@ -38,75 +42,63 @@ const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
     for (let i = 0; i < stakeIDs.length; i++) {
       let sequenceList = []
 
+      // let the sequnce list
       for (let k = 0; k < 5; k++) {
         const sequence = await unifarmV1.methods
           .tokensSequenceList(tokenAddress[i], k)
           .call()
+
         sequenceList.push(sequence.toLowerCase())
       }
       // debugger
       sequenceListEveryStake[stakeIDs[i]] = sequenceList
 
-      let rewardsAmt = []
+      let myRewards = []
 
       for (let item of sequenceListEveryStake[stakeIDs[i]]) {
         if (isActive[i]) {
           const avaliableRewards = await unifarmV1.methods
             .viewAvailableRewards(account, stakeIDs[i], item)
             .call()
-          rewardsAmt.push(avaliableRewards)
+          myRewards.push(avaliableRewards)
         } else {
-          rewardsAmt = [0.0, 0.0, 0.0, 0.0, 0.0]
+          myRewards = [0.0, 0.0, 0.0, 0.0, 0.0]
         }
       }
 
       for (let i = 0; i < 5; i++) {
         let obj = {}
+
         obj['tokenName'] = tokenNames[i]
         obj['isActive'] = isActive[i]
         obj['stakeID'] = stakeIDs[i]
-        obj['stakeAmount'] = stakeAmount[i]
-        obj['DaysStaked'] = startTime[i]
+        obj['stakeAmount'] = stakedAmount[i]
+        obj['DaysStaked'] = DaysStaked[i]
         // obj['refreshTime'] = refereshTime[i];
-        obj['MyRewards'] = rewardEachStake[stakeIDs[i]]
+        obj['MyRewards'] = myRewards[stakeIDs[i]]
         obj['rewarsTokenSrc'] = sequenceListImages[stakeIDs[i]]
         obj['typeFor'] = 'v1'
         obj['isLockIn'] = false
 
-        renderObject.push(obj)
+        v1PoolData.push(obj)
       }
 
       // console.log('render object', renderObject);
-      const unStakeData = []
 
-      const ref = firebase.database().ref('blockHashTable')
-      ref.on('value', (snapshot) => {
-        // console.log('firebase response here', snapshot);
-        if (snapshot && snapshot.exists()) {
-          const obj = snapshot.val()
-          for (let id in obj) {
-            unStakeData.push(obj[id])
-          }
-        }
-      })
-      console.log({
-        renderObject,
-        unStakeData
-      })
+      return v1PoolData
     }
   } catch (err) {
-    console.log(err.message)
+    alert(err.message)
   }
 }
 
 const getStakingDetailsV2 = async (unifarmV2: any, account: string) => {
   if (!account || !unifarmV2) return null
-
   try {
     // tokenNames
     const tokenNames = []
     // render Object Final Output.
-    const renderObject = []
+    const v2PoolData = []
     // unifarmV1 view Staking Details.
     const stakeDetails = await unifarmV2.methods
       .viewStakingDetails(account)
@@ -162,29 +154,35 @@ const getStakingDetailsV2 = async (unifarmV2: any, account: string) => {
         obj['typeFor'] = 'v2'
         obj['isLockIn'] = true
 
-        renderObject.push(obj)
+        v2PoolData.push(obj)
       }
       // console.log('render object', renderObject);
-      const unStakeDataForV2 = []
 
-      const ref = firebase.database().ref('blockHashTable')
-      ref.on('value', (snapshot) => {
-        // console.log('firebase response here', snapshot);
-        if (snapshot && snapshot.exists()) {
-          const obj = snapshot.val()
-          for (let id in obj) {
-            unStakeDataForV2.push(obj[id])
-          }
-        }
-      })
-
-      console.log({
-        renderObject,
-        unStakeDataForV2
-      })
+      return { v2PoolData }
     }
   } catch (err) {
     console.log(err)
+  }
+}
+
+const getFireBaseUnstakeData = async () => {
+  try {
+    const unStakeData = []
+
+    const ref = firebase.database().ref('blockHashTable')
+    ref.on('value', (snapshot) => {
+      // console.log('firebase response here', snapshot);
+      if (snapshot && snapshot.exists()) {
+        const obj = snapshot.val()
+        for (let id in obj) {
+          unStakeData.push(obj[id])
+        }
+      }
+    })
+
+    return { unStakeData }
+  } catch (err) {
+    console.log(err.message)
   }
 }
 
@@ -220,10 +218,17 @@ export const useStakingDataOnLoadOrPropsReceive = () => {
         console.log(err)
       })
 
+    let unStakeObj
+
+    getFireBaseUnstakeData().then((result) => {
+      unStakeObj = result
+    })
+
     dispatch(
       setUserStakingDetails({
         stakeLoader: false,
-        stakingPayload: globalArray
+        stakingPayload: globalArray,
+        unStakeData: unStakeObj
       })
     )
 

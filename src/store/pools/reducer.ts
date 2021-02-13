@@ -12,7 +12,7 @@ export interface PayloadSize {
   moreDetailsRoute: string
   isFired: boolean
   typeFor: string
-  rewards: number[]
+  rewards?: any
 }
 
 interface InitialPoolState {
@@ -34,7 +34,6 @@ export const poolReducer = createReducer<InitialPoolState>(
       setDailyRewardsDistrubution,
       (state, { payload: { fullfilled, poolData } }) => {
         return {
-          ...state,
           fullfilled,
           poolData
         }

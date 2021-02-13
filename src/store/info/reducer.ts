@@ -7,7 +7,7 @@ export interface StakeInfoData {
   poolName?: string
   tokenNames?: any[]
   stakeID?: any[]
-  stakeAmount?: any[]
+  stakedAmount?: any[]
   isActive?: any[]
   poolIcon?: string
   rewardsSequenceSrc?: string[]
@@ -25,6 +25,7 @@ export interface StakeInfoData {
 export interface StakingInfo {
   stakeLoader: boolean
   stakingPayload?: StakeInfoData[] | null
+  unStakeData?: null | object
 }
 
 const InitialStakeInfoStake: StakingInfo = {
@@ -37,10 +38,11 @@ export const InfoReducer = createReducer<StakingInfo>(
   (builder) => {
     builder.addCase(
       setUserStakingDetails,
-      (state, { payload: { stakeLoader, stakingPayload } }) => {
+      (state, { payload: { stakeLoader, stakingPayload, unStakeData } }) => {
         return {
           stakeLoader,
-          stakingPayload
+          stakingPayload,
+          unStakeData
         }
       }
     )

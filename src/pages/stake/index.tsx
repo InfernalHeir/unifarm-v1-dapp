@@ -75,8 +75,7 @@ const Stake = () => {
           </Connect>
         )}
       </Wrapper>
-      {poolData.fullfilled ||
-        (!isFull.setReset && <PoolComponent showRewards={poolData.poolData} />)}
+      {poolData.fullfilled && <PoolComponent showRewards={poolData.poolData} />}
     </AppBody>
   )
 }

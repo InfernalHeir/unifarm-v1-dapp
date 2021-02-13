@@ -105,24 +105,26 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                                 <div className="col-lg-8 row mt-3">
                                   <>
-                                    {item.rewards.map((value, key) => {
-                                      return (
-                                        <Grid key={key}>
-                                          <div>
-                                            <img width="20" />
-                                          </div>
-                                          <div>
-                                            <p style={{ marginBottom: 0 }}>
-                                              <b>ORO</b>
-                                            </p>
-                                          </div>
+                                    {item.rewards.selectedTokenRewardByOtherV1.map(
+                                      (value, key) => {
+                                        return (
+                                          <Grid key={key}>
+                                            <div>
+                                              <img width="20" />
+                                            </div>
+                                            <div>
+                                              <p style={{ marginBottom: 0 }}>
+                                                <b>ORO</b>
+                                              </p>
+                                            </div>
 
-                                          <div>
-                                            <p>{value.toFixed(4)}</p>
-                                          </div>
-                                        </Grid>
-                                      )
-                                    })}
+                                            <div>
+                                              <p>{value.toFixed(4)}</p>
+                                            </div>
+                                          </Grid>
+                                        )
+                                      }
+                                    )}
                                   </>
                                 </div>
 

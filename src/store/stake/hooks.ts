@@ -11,7 +11,6 @@ import useTokenContract, {
   useUnifarmV2Contract
 } from '../../hooks/useTokenContract'
 import { getExactAddress } from '../../utils'
-import useUserMaxStake from '../../hooks/useUserMaxStake'
 import { useResetData, useResetPool } from '../pools/hooks'
 
 export const useSetTokenDetails = () => {
@@ -39,11 +38,9 @@ export const useOnChange = () => {
   const { library, account } = useWeb3React()
 
   const getBalance = useFetchTokenBalance(state.tokenAddress)
-  const getUsermaxStake = useUserMaxStake(state.tokenAddress)
-  console.log(getUsermaxStake)
   const dispatch = useDispatch()
 
-  const { setReset }: any = useResetPool()
+  const { setResetPool }: any = useResetPool()
   const isFulllied = useResetData()
 
   const onInputChange = (value: number) => {
@@ -58,7 +55,7 @@ export const useOnChange = () => {
     )
 
     if (isFulllied.fullfilled) {
-      setReset(true)
+      setResetPool(true)
     }
   }
 
@@ -92,6 +89,17 @@ export const useOnChange = () => {
       try {
         // setApp loader
         setApploader(true)
+        // check here for user max stake check
+
+        const userMaxStake = await unifarmV1Instance.methods
+          .tokensDetails(state.tokenAddress)
+          .call()
+        const userMax = userMaxStake[2]
+        const etherAmount = library.utils.fromWei(userMax)
+
+        if (userMax > parseTokens) {
+          setAppError(true, `Maximun token can be staked ${etherAmount} Tokens`)
+        }
 
         await unifarmV1Instance.methods
           .stake(state.tokenAddress, parseTokens)
@@ -100,7 +108,6 @@ export const useOnChange = () => {
           })
         // dispatch applciation success here.
         setAppSuccess(true, 'Stake Successfully')
-
         setApploader(false)
       } catch (err) {
         setAppError(true, err.message)
@@ -110,6 +117,16 @@ export const useOnChange = () => {
         // setApp loader
         setApploader(true)
         const referal = '0xF6C172dd45ABd82E1F067801B309A7fFC4977971'
+
+        const userMaxStake = await unifarmV2Instance.methods
+          .tokensDetails(state.tokenAddress)
+          .call()
+        const userMaxStakeIndex = userMaxStake[2]
+        const etherAmount = library.utils.fromWei(userMaxStakeIndex)
+
+        if (userMaxStakeIndex > parseTokens) {
+          setAppError(true, `Maximun token can be staked ${etherAmount} Tokens`)
+        }
 
         await unifarmV2Instance.methods
           .stake(referal, state.tokenAddress, parseTokens)
@@ -125,9 +142,25 @@ export const useOnChange = () => {
     }
   }
 
+  const onUnStake = async (typeFor?: string, stakeId?: string) => {
+    // check first is it for v1 for v2
+    var unifarmInstance
+    if (typeFor === 'v1') {
+      unifarmInstance = unifarmV1Instance
+    } else {
+      unifarmInstance = unifarmV2Instance
+    }
+    // call unstake method
+    // first set the modal open the call this function
+    await unifarmInstance.methods.unStake(stakeId).send({
+      from: account
+    })
+  }
+
   return {
     onInputChange,
     onApprove,
-    onStake
+    onStake,
+    onUnStake
   }
 }

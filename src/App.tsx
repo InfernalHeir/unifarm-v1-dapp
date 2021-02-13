@@ -7,7 +7,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 import Web3Modal from './components/Web3Modal'
 import Stake from './pages/stake'
 import './index.css'
-import Calculator from './pages/calculator'
+//import Calculator from './pages/calculator'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Web3ReactManager from './components/Web3ReactManager'
 import StakeInfo from './pages/stakinginfo'
@@ -28,7 +28,6 @@ const App = () => {
             <Web3ReactManager />
             <Switch>
               <Route path="/" component={Stake} exact />
-              <Route path="/stake" component={Calculator} />
               <Route path="/staking-info" component={StakeInfo} />
               <Route path="/claim-history" component={Claim} />
             </Switch>
