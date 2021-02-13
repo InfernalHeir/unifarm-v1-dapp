@@ -1,5 +1,5 @@
 import { blue } from '@material-ui/core/colors'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useOnChange } from '../../store/stake/hooks'
@@ -24,7 +24,19 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
   const { onStake }: any = useOnChange()
   const state: any = useAppsStatus()
 
-  const { setToClose }: any = useSetApporveModal()
+  const [config, setConfig] = useState<{
+    type?: string | null
+    openModal: boolean
+  }>({
+    openModal: false
+  })
+
+  const close = () => {
+    setConfig({
+      openModal: false
+    })
+  }
+
   return (
     <div>
       {showRewards
@@ -141,7 +153,12 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                   </Link>
 
                                   <button
-                                    onClick={() => onStake(item.typeFor)}
+                                    onClick={() => {
+                                      setConfig({
+                                        type: item.typeFor,
+                                        openModal: true
+                                      })
+                                    }}
                                     className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
                                     style={{
                                       fontSize: 12
@@ -166,8 +183,9 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
           })
         : ''}
       <ApproveModal
-        isOpen={state.appRoveModal}
-        close={() => setToClose(!state.appRoveModal)}
+        isOpen={config.openModal}
+        close={() => close()}
+        typeFor={config.type}
       />
     </div>
   )

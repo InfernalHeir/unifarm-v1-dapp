@@ -71,6 +71,7 @@ export const useOnChange = () => {
     try {
       // setApp loader
       setApploader(true)
+
       await instance.methods.approve(getApprovalAddress, parseTokens).send({
         from: account
       })
@@ -84,15 +85,14 @@ export const useOnChange = () => {
 
   const onStake = async (typeFor: string) => {
     const parseTokens = library.utils.toWei(state.stakingAmount.toString())
-
+    if (!state.tokenAddress || !state.stakingAmount) return null
     if (typeFor === 'v1') {
       try {
         // setApp loader
         setApploader(true)
         // check here for user max stake check
-
         const userMaxStake = await unifarmV1Instance.methods
-          .tokensDetails(state.tokenAddress)
+          .tokenDetails(state.tokenAddress)
           .call()
         const userMax = userMaxStake[2]
         const etherAmount = library.utils.fromWei(userMax)
@@ -134,7 +134,7 @@ export const useOnChange = () => {
             from: account
           })
         // dispatch applciation success here.
-        setAppSuccess(true, 'Approve Successfully')
+        setAppSuccess(true, 'Stake Successfully')
         setApploader(false)
       } catch (err) {
         setAppError(true, err.message)
