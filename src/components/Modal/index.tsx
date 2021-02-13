@@ -1,11 +1,11 @@
-import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import { Zoom } from "@material-ui/core";
+import React from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import { Zoom } from '@material-ui/core'
 
 interface ModalProps {
-  children: React.ReactNode;
-  isOpen: boolean;
-  close: () => void;
+  children: React.ReactNode
+  isOpen: boolean
+  close: () => void
 }
 
 const Modal = ({ children, isOpen, close }: ModalProps) => {
@@ -15,11 +15,10 @@ const Modal = ({ children, isOpen, close }: ModalProps) => {
       onClose={close}
       open={isOpen}
       aria-labelledby="Connection Modal"
-      TransitionComponent={Zoom}
     >
       {children}
     </Dialog>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

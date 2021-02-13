@@ -1,8 +1,10 @@
-import { blue } from "@material-ui/core/colors"
-import React from "react"
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import { useOnChange } from "../../store/stake/hooks"
+import { blue } from '@material-ui/core/colors'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { useOnChange } from '../../store/stake/hooks'
+import ApproveModal from '../ApproveModal'
+import { useAppsStatus, useSetApporveModal } from '../../store/app/hooks'
 
 const StyledPoolIcon = styled.img`
   width: 30px;
@@ -13,8 +15,16 @@ const StyledPoolName = styled.h5`
   font-weight: 800;
 `
 
+const Grid = styled.div`
+  display: grid;
+  grid-template-row: repeat(5);
+`
+
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
   const { onStake }: any = useOnChange()
+  const state: any = useAppsStatus()
+
+  const { setToClose }: any = useSetApporveModal()
   return (
     <div>
       {showRewards
@@ -24,7 +34,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                 <div className="col-lg-3">
                   <div
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
-                    style={{ backgroundColor: "white" }}
+                    style={{ backgroundColor: 'white' }}
                   >
                     <StyledPoolIcon src={item.poolIcon} alt={item.poolName} />
                     <br />
@@ -35,7 +45,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                   <div
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
-                    style={{ backgroundColor: "white" }}
+                    style={{ backgroundColor: 'white' }}
                   >
                     <div className="btn scale btn_lg_primary1  br-10 effect-letter rounded-4">
                       {item.rewardsSequenceSrc.map((img) => {
@@ -68,7 +78,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                         <b>Lock In</b>
                                         <br />
                                         <span>
-                                          {item.lockIn ? item.lockIn : "0"} Days
+                                          {item.lockIn ? item.lockIn : '0'} Days
                                         </span>
                                       </div>
                                     </div>
@@ -93,52 +103,35 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                   </div>
                                 </div>
 
-                                <div className="col-lg-3 mt-3">
-                                  <div>
-                                    <div>
-                                      <img width="20" />
-                                    </div>
-                                    <div className="">
-                                      <p style={{ marginBottom: 0 }}>
-                                        <b>ORO</b>
-                                      </p>
-                                      <hr className="line" />
-                                    </div>
-                                    <div>
-                                      <p>0.9</p>
-                                    </div>
-                                  </div>
-                                </div>
+                                <div className="col-lg-8 row mt-3">
+                                  <>
+                                    {item.rewards.map((value, key) => {
+                                      return (
+                                        <Grid key={key}>
+                                          <div>
+                                            <img width="20" />
+                                          </div>
+                                          <div>
+                                            <p style={{ marginBottom: 0 }}>
+                                              <b>ORO</b>
+                                            </p>
+                                          </div>
 
-                                <div className="col-lg-5 mt-3">
-                                  <div>
-                                    <div className="d-flex">
-                                      {/*Here is start */}
-                                      <div>
-                                        <img width="20" />
-                                        <p>
-                                          <b>FRONT</b>
-                                        </p>
-                                        <hr className="line" />
-                                      </div>
-                                      {/*Here is start */}
-                                      <div className="ml-3 ">
-                                        <img width="20" className="ml-2" />
-                                        <p>
-                                          <b>CNTR</b>
-                                        </p>
-                                        <hr className="line" />
-                                      </div>
-                                    </div>
-                                  </div>
+                                          <div>
+                                            <p>{value.toFixed(4)}</p>
+                                          </div>
+                                        </Grid>
+                                      )
+                                    })}
+                                  </>
                                 </div>
 
                                 {/*You can create new col*/}
                                 <div className="col-md-4 select-unstaike-button">
                                   <Link
                                     style={{
-                                      background: "transparent",
-                                      color: "blue"
+                                      background: 'transparent',
+                                      color: 'blue'
                                     }}
                                     to={item.moreDetailsRoute}
                                   >
@@ -169,7 +162,11 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
               </div>
             )
           })
-        : ""}
+        : ''}
+      <ApproveModal
+        isOpen={state.appRoveModal}
+        close={() => setToClose(!state.appRoveModal)}
+      />
     </div>
   )
 }

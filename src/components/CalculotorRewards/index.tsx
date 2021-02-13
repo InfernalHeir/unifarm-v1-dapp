@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import one from "../../assests/images/Tokens/oro.png";
-import two from "../../assests/images/Tokens/cntr.png";
-import three from "../../assests/images/Tokens/reef.png";
-import four from "../../assests/images/Tokens/frontier.png";
-import five from "../../assests/images/Tokens/matic.png";
-import ProgressBar from "react-customizable-progressbar";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import { CircularProgress, StepLabel } from "@material-ui/core";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react"
+import one from "../../assests/images/Tokens/oro.png"
+import two from "../../assests/images/Tokens/cntr.png"
+import three from "../../assests/images/Tokens/reef.png"
+import four from "../../assests/images/Tokens/frontier.png"
+import five from "../../assests/images/Tokens/matic.png"
+import ProgressBar from "react-customizable-progressbar"
+import Stepper from "@material-ui/core/Stepper"
+import Step from "@material-ui/core/Step"
+import { CircularProgress, StepLabel } from "@material-ui/core"
+import styled from "styled-components"
 import useTokenContract, {
   useUnifarmV2Contract
-} from "../../hooks/useTokenContract";
-import { useOnChange, useSelectedTokens } from "../../store/stake/hooks";
-import { useWeb3React } from "@web3-react/core";
-import { UnifarmV1Address, UnifarmV2Address } from "../../constants";
-import { formatEther, parseUnits } from "@ethersproject/units";
-import { Redirect } from "react-router-dom";
-import { isAddress } from "@ethersproject/address";
+} from "../../hooks/useTokenContract"
+import { useOnChange, useSelectedTokens } from "../../store/stake/hooks"
+import { useWeb3React } from "@web3-react/core"
+import { UnifarmV1Address, UnifarmV2Address } from "../../constants"
+import { formatEther, parseUnits } from "@ethersproject/units"
+import { Redirect } from "react-router-dom"
+import { isAddress } from "@ethersproject/address"
 
 const StyledAlert = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const StyledAlert = styled.div`
   border: 2px solid red;
   padding: 11px;
   font-weight: 800;
-`;
+`
 
 const HeaderReturn = styled.div`
   text-align: center;
@@ -37,7 +37,7 @@ const HeaderReturn = styled.div`
   font-weight: 800;
   font-size: 22px;
   text-align: center;
-`;
+`
 
 const ReturnsWrapper = styled.div`
   max-width: 550px;
@@ -47,98 +47,98 @@ const ReturnsWrapper = styled.div`
   background: white;
   margin: auto;
   border: 1px solid #9f9f9f4a;
-`;
+`
 
 const DaysStart = styled.span`
   position: absolute;
   right: 46px;
   top: -20px;
-`;
+`
 
 const DaysTitle = styled.span`
   position: absolute;
   right: 40px;
   top: 10px;
   font-size: 20px;
-`;
+`
 
 function CalculotorRewards() {
-  const selectedToken = useSelectedTokens();
-  const [oro, setOro] = useState(200);
-  const [matic, setMatic] = useState(100);
-  const [cntr, setCntr] = useState(0.5336);
-  const [reef, setReef] = useState(0.905);
-  const [front, setFront] = useState(200);
-  const [day, setDay] = useState(0);
-  const [value, setValue] = useState(0);
-  const [step, setStep] = useState(0);
-  const [stack, setStack] = useState(false);
-  const [aprove, setAprove] = useState(true);
-  const [btnDisabled, setbtnDisabled] = useState(false);
+  const selectedToken = useSelectedTokens()
+  const [oro, setOro] = useState(200)
+  const [matic, setMatic] = useState(100)
+  const [cntr, setCntr] = useState(0.5336)
+  const [reef, setReef] = useState(0.905)
+  const [front, setFront] = useState(200)
+  const [day, setDay] = useState(0)
+  const [value, setValue] = useState(0)
+  const [step, setStep] = useState(0)
+  const [stack, setStack] = useState(false)
+  const [aprove, setAprove] = useState(true)
+  const [btnDisabled, setbtnDisabled] = useState(false)
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [error, setError] = useState<{ err: boolean; message: string | null }>({
     err: false,
     message: null
-  });
+  })
 
-  const { onApprove, onStake } = useOnChange();
+  const { onApprove, onStake } = useOnChange()
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setDay((day) => day + 1);
-      setOro((oro) => oro + 2);
-      setMatic((matic) => matic + 5);
-      setCntr((cntr) => cntr + 3);
-      setReef((reef) => reef + 2);
-      setFront((front) => front + 4);
-    }, 100);
+      setDay((day) => day + 1)
+      setOro((oro) => oro + 2)
+      setMatic((matic) => matic + 5)
+      setCntr((cntr) => cntr + 3)
+      setReef((reef) => reef + 2)
+      setFront((front) => front + 4)
+    }, 100)
     if (day === 90) {
-      clearInterval(timer);
+      clearInterval(timer)
     }
     return () => {
-      clearInterval(timer);
-    };
-  }, [day]);
+      clearInterval(timer)
+    }
+  }, [day])
+
   function approve() {
-    setStep(1);
-    setAprove(true);
-    setStack(true);
-    setbtnDisabled(true);
+    setStep(1)
+    setAprove(true)
+    setStack(true)
+    setbtnDisabled(true)
   }
 
-  const { active, account, library } = useWeb3React();
-  const instance = useTokenContract(selectedToken.tokenAddress);
+  const { active, account, library } = useWeb3React()
+  const instance = useTokenContract(selectedToken.tokenAddress)
 
   useEffect(() => {
-    if (!instance || !active || !account) return null;
+    if (!instance || !active || !account) return null
     instance.methods
       .allowance(account, UnifarmV1Address)
       .call()
       .then((result) => {
-        console.log(result);
-        const etherAmount = library.utils.fromWei(result.toString());
+        console.log(result)
+        const etherAmount = library.utils.fromWei(result.toString())
         if (selectedToken.stakingAmount > etherAmount) {
-          setAprove(true);
-          setStack(true);
+          setAprove(true)
         } else {
-          setAprove(false);
+          setAprove(false)
         }
       })
       .catch((err) => {
         setError({
           err: true,
           message: err.message
-        });
-      });
-  }, [selectedToken]);
+        })
+      })
+  }, [selectedToken])
 
-  const unifarmInstance = useUnifarmV2Contract();
+  const unifarmInstance = useUnifarmV2Contract()
 
   useEffect(() => {
-    if (!unifarmInstance || !active || !account) return null;
-    console.log(selectedToken.tokenAddress);
+    if (!unifarmInstance || !active || !account) return null
+    console.log(selectedToken.tokenAddress)
     if (
       selectedToken.tokenAddress ===
       "0xbe2845e7520223bfd6ab4e6f6ad4369f6ffa6e0e"
@@ -147,31 +147,30 @@ function CalculotorRewards() {
         .whiteListUserStatus(selectedToken.tokenAddress, account)
         .call()
         .then((result) => {
-          console.log(result);
           if (!result) {
             setError({
               err: true,
               message: "The Address you 're using is not Whitelisted."
-            });
+            })
           } else {
             setError({
               err: false,
               message: null
-            });
+            })
           }
         })
         .catch((err) => {
           setError({
             err: true,
             message: err.message
-          });
-        });
+          })
+        })
     }
-  }, [selectedToken]);
+  }, [selectedToken])
 
   const RenderDyanmicElement = () => {
     if (error.err) {
-      return <StyledAlert>{error.message}</StyledAlert>;
+      return <StyledAlert>{error.message}</StyledAlert>
     } else {
       return (
         <>
@@ -226,9 +225,9 @@ function CalculotorRewards() {
             </Step>
           </Stepper>
         </>
-      );
+      )
     }
-  };
+  }
   return (
     <div>
       <ReturnsWrapper className="row">
@@ -306,6 +305,6 @@ function CalculotorRewards() {
         ) : null}
       </ReturnsWrapper>
     </div>
-  );
+  )
 }
-export default CalculotorRewards;
+export default CalculotorRewards

@@ -1,21 +1,54 @@
 import {
   useUnifarmV1Contract,
   useUnifarmV2Contract
-} from "../../hooks/useTokenContract"
-import { useSelectedTokens } from "../stake/hooks"
-import one from "../../assests/images/Tokens/Nord.png"
-import two from "../../assests/images/Tokens/matic.png"
-import three from "../../assests/images/Tokens/TVK.png"
-import four from "../../assests/images/Tokens/ROUTE.png"
-import five from "../../assests/images/Tokens/frontier.png"
-import { useDispatch } from "react-redux"
-import { setLoader } from "../app/action"
-import { setDailyRewardsDistrubution } from "../pools/action"
-import { formatEther } from "@ethersproject/units"
-import { useSetApplicationStatus } from "../app/hooks"
-import { useWeb3React } from "@web3-react/core"
-import { SupportedTokens, tokensSequenceListPool } from "../../constants"
-import { getKeyByValue } from "../../utils"
+} from '../../hooks/useTokenContract'
+import { useSelectedTokens } from '../stake/hooks'
+import nord from '../../assests/images/Tokens/Nord.png'
+import matic from '../../assests/images/Tokens/matic.png'
+import tvk from '../../assests/images/Tokens/TVK.png'
+import route from '../../assests/images/Tokens/ROUTE.png'
+import front from '../../assests/images/Tokens/frontier.png'
+import oro from '../../assests/images/Tokens/oro.png'
+import reef from '../../assests/images/Tokens/reef.png'
+import cntr from '../../assests/images/Tokens/cntr.png'
+import zee from '../../assests/images/Tokens/zeroswap.png'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { setLoader } from '../app/action'
+import { setDailyRewardsDistrubution, setReset } from '../pools/action'
+import { formatEther } from '@ethersproject/units'
+import { useSetApplicationStatus } from '../app/hooks'
+import { useWeb3React } from '@web3-react/core'
+import {
+  SupportedTokens,
+  tokensSequenceListPool,
+  tokensSequenceListPoolV2
+} from '../../constants'
+import { getKeyByValue } from '../../utils'
+import { AppState } from '..'
+
+export const useResetPool = () => {
+  const dispatch = useDispatch()
+  const setReset = (bool: boolean) => {
+    return dispatch(setReset(bool))
+  }
+  return setReset
+}
+
+export const useResetData = () => {
+  return useSelector((state: AppState) => {
+    return state.poolReducer
+  })
+}
+const getImagebyIndex = (object: any, address: string) => {
+  var key
+  for (var prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      if (object[prop] === address) key = prop
+    }
+  }
+  return key
+}
 
 export const usePoolData = () => {
   // unifarm contract instance.
@@ -31,85 +64,237 @@ export const usePoolData = () => {
 
   // getPoolInfo function
 
-  const getSequenceImageSrc = async () => {
+  const getV1Rewards = async () => {
+    try {
+      const selectedTokenRewardByOtherV1 = []
+
+      for (const key in tokensSequenceListPool) {
+        const tokens = library.utils.toWei(
+          selectedTokens.stakingAmount.toString()
+        )
+
+        const selectedTokenReward = await unifarmV1.methods
+          .getOneDayReward(
+            tokens,
+            selectedTokens.tokenAddress,
+            tokensSequenceListPool[key]
+          )
+          .call()
+
+        var Rewardvalue
+        if (!selectedTokenReward) {
+          Rewardvalue = '0.0'
+        }
+        Rewardvalue = selectedTokenReward
+
+        const tokensReward = library.utils.fromWei(Rewardvalue.toString())
+        // do one calc more
+        const getDays = await unifarmV1.methods.stakeDuration().call()
+        const getOneDay = getDays / 86400
+
+        const perDayTokensRewards = tokensReward
+          ? getOneDay * tokensReward
+          : '0'
+
+        selectedTokenRewardByOtherV1.push(perDayTokensRewards)
+      }
+      return { selectedTokenRewardByOtherV1 }
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  const getV2Rewards = async () => {
+    try {
+      const selectedTokenRewardByOtherV2 = []
+
+      for (const key in tokensSequenceListPool) {
+        const tokens = library.utils.toWei(
+          selectedTokens.stakingAmount.toString()
+        )
+
+        const selectedTokenReward = await unifarmV2.methods
+          .getOneDayReward(
+            tokens,
+            selectedTokens.tokenAddress,
+            tokensSequenceListPool[key]
+          )
+          .call()
+
+        var Rewardvalue
+        if (!selectedTokenReward) {
+          Rewardvalue = '0.0'
+        }
+        Rewardvalue = selectedTokenReward
+        const tokensReward = library.utils.fromWei(Rewardvalue.toString())
+        // do one calc more
+        const getDays = await unifarmV2.methods.stakeDuration().call()
+        const getOneDay = getDays / 86400
+
+        const perDayTokensRewards = tokensReward
+          ? getOneDay * tokensReward
+          : '0'
+
+        selectedTokenRewardByOtherV2.push(perDayTokensRewards)
+      }
+      return { selectedTokenRewardByOtherV2 }
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  // get the image Sequence V1
+  const getSequenceImageSrcV1 = async () => {
     // for v1
-    var tokenSequenceListForV1 = []
-    var i
+    try {
+      var tokenSequenceListForV1 = []
+      var i
 
-    for (i = 0; i < 5; i++) {
-      const tokenSequnence = await unifarmV1.methods
-        .tokensSequenceList(selectedTokens.tokenAddress, i)
-        .call()
-      tokenSequenceListForV1.push(tokenSequnence)
-    }
+      for (i = 0; i < 5; i++) {
+        const tokenSequnence = await unifarmV1.methods
+          .tokensSequenceList(selectedTokens.tokenAddress, i)
+          .call()
+        tokenSequenceListForV1.push(tokenSequnence)
+      }
 
-    let imageSrcArray = []
-    let k
-    for (k = 0; k < tokenSequenceListForV1.length; k++) {
-      const addressList = tokenSequenceListForV1[k]
-      const getKeyName = getKeyByValue(tokensSequenceListPool, addressList)
-      console.log(getKeyName)
+      let k
+
+      const { selectedTokenRewardByOtherV1 } = await getV1Rewards()
+
+      Object.keys(SupportedTokens).map((key, index) => {
+        const tokenAddressSequence = tokenSequenceListForV1[index]
+        console.log(tokenAddressSequence)
+        const getKeyIndex = getKeyByValue(
+          tokensSequenceListPool,
+          tokenAddressSequence
+        )
+        console.log(getKeyIndex)
+      })
+
+      for (k = 0; k < tokenSequenceListForV1.length; k++) {
+        var address = tokenSequenceListForV1[k]
+        var support = SupportedTokens[k]
+        console.log(support)
+      }
+      return { selectedTokenRewardByOtherV1 }
+    } catch (err) {
+      console.log(err.message)
     }
-    console.log(imageSrcArray)
+  }
+  // get The image
+  const getSequenceImageSrcV2 = async () => {
+    try {
+      var tokenSequenceListForV2 = []
+      var i
+
+      for (i = 0; i < 6; i++) {
+        const tokenSequnence = await unifarmV1.methods
+          .tokensSequenceList(selectedTokens.tokenAddress, i)
+          .call()
+
+        tokenSequenceListForV2.push(tokenSequnence)
+      }
+
+      let imageSrcArray = []
+      let tokenRewardsName = []
+      let k
+
+      const { selectedTokenRewardByOtherV2 } = await getV2Rewards()
+
+      Object.keys(SupportedTokens).map((key, index) => {
+        const tokenAddressSequence = tokenSequenceListForV2[index]
+        const getKeyIndex = getKeyByValue(
+          tokensSequenceListPool,
+          tokenAddressSequence
+        )
+        console.log(getKeyIndex)
+      })
+
+      for (k = 0; k < tokenSequenceListForV2.length; k++) {
+        var address = tokenSequenceListForV2[k]
+        var support = SupportedTokens[k]
+        console.log(support)
+      }
+      return { selectedTokenRewardByOtherV2 }
+    } catch (err) {
+      console.log(err.message)
+    }
   }
 
   const getSequenceListOfV2 = async () => {
     // for v1
-    var tokenSequenceListForV2 = []
-    var i
-    for (i = 0; i < 6; i++) {
-      const tokenSequnence = await unifarmV2.methods
-        .tokensSequenceList(selectedTokens.tokenAddress, i)
-        .call()
-      tokenSequenceListForV2.push(tokenSequnence)
+    try {
+      var tokenSequenceListForV2 = []
+      var i
+      for (i = 0; i < 6; i++) {
+        const tokenSequnence = await unifarmV2.methods
+          .tokensSequenceList(selectedTokens.tokenAddress, i)
+          .call()
+        tokenSequenceListForV2.push(tokenSequnence)
+      }
+
+      let imageSrcArray = []
+      let k
+
+      for (k = 0; k < tokenSequenceListForV2.length; k++) {
+        const imageSrc = SupportedTokens[k].icon
+        imageSrcArray.push(imageSrc)
+      }
+
+      return imageSrcArray
+    } catch (err) {
+      console.log(err.message)
     }
-
-    let imageSrcArray = []
-    let k
-
-    for (k = 0; k < tokenSequenceListForV2.length; k++) {
-      const imageSrc = SupportedTokens[k].icon
-      imageSrcArray.push(imageSrc)
-    }
-
-    return imageSrcArray
   }
 
   const getPoolV1DataByOnce = async () => {
-    const getV1PoolData = await unifarmV1.methods
-      .tokenDetails(selectedTokens.tokenAddress)
-      .call()
+    try {
+      const getV1PoolData = await unifarmV1.methods
+        .tokenDetails(selectedTokens.tokenAddress)
+        .call()
 
-    //const getSequence = await getSequenceImageSrc();
-    return {
-      poolName: selectedTokens.name,
-      poolIcon: selectedTokens.icon,
-      rewardsSequenceSrc: [one, two, three, four, five],
-      Apy: "42%",
-      maxStakingLimit: library.utils.fromWei(getV1PoolData[2].toString()),
-      network: "Ethereum",
-      moreDetailsRoute: "/stake",
-      isFired: true,
-      typeFor: "v1"
+      const selectedTokenRewardByOtherV1 = await getSequenceImageSrcV1()
+      //const getSequence = await getSequenceImageSrc();
+      return {
+        poolName: selectedTokens.name,
+        poolIcon: selectedTokens.icon,
+        rewardsSequenceSrc: [oro, matic, reef, front, cntr],
+        Apy: '42%',
+        maxStakingLimit: library.utils.fromWei(getV1PoolData[2].toString()),
+        network: 'Ethereum',
+        moreDetailsRoute: '/stake',
+        isFired: true,
+        typeFor: 'v1',
+        rewards: selectedTokenRewardByOtherV1
+      }
+    } catch (err) {
+      console.log(err)
     }
   }
 
   const getPoolV2DataByOnce = async () => {
-    const getV2PoolData = await unifarmV2.methods
-      .tokenDetails(selectedTokens.tokenAddress)
-      .call()
+    try {
+      const getV2PoolData = await unifarmV2.methods
+        .tokenDetails(selectedTokens.tokenAddress)
+        .call()
 
-    return {
-      poolName: selectedTokens.name,
-      poolIcon: selectedTokens.icon,
-      rewardsSequenceSrc: [one, two, three, four, five],
-      Apy: "42%",
-      lockIn: getV2PoolData[4],
-      maxStakingLimit: library.utils.fromWei(getV2PoolData[2].toString()),
-      network: "Ethereum",
-      moreDetailsRoute: "/stake",
-      isFired: true,
-      typeFor: "v2"
+      const selectedTokenRewardByOtherV2 = await getSequenceImageSrcV2()
+
+      return {
+        poolName: selectedTokens.name,
+        poolIcon: selectedTokens.icon,
+        rewardsSequenceSrc: [oro, matic, zee, nord, tvk, route],
+        Apy: '46%',
+        lockIn: getV2PoolData[4],
+        maxStakingLimit: library.utils.fromWei(getV2PoolData[2].toString()),
+        network: 'Ethereum',
+        moreDetailsRoute: '/stake',
+        isFired: true,
+        typeFor: 'v2',
+        rewards: selectedTokenRewardByOtherV2
+      }
+    } catch (err) {
+      console.log(err.message)
     }
   }
 
@@ -120,13 +305,12 @@ export const usePoolData = () => {
 
     if (selectedTokens.v1 && selectedTokens.v2) {
       // fetch the v1 data first
+
       var globalArray = []
       const fetchPool1Data = await getPoolV1DataByOnce()
       const fetchPool2Data = await getPoolV2DataByOnce()
 
       globalArray.push(fetchPool1Data, fetchPool2Data)
-
-      await getSequenceImageSrc()
 
       dispatch(
         setDailyRewardsDistrubution({

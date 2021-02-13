@@ -1,7 +1,7 @@
 {
   "rules": {
     "no-await-in-loop": "off",
-    "eqeqeq": "error",
+    "eqeqeq": "off",
     "no-unused-vars": "off",
     "no-console": "off",
     "semi": "off"

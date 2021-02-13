@@ -1,125 +1,133 @@
-import { useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setTokenDetails, TypeInput } from "./action";
-import { AppState } from "../index";
-import useFetchTokenBalance from "../../hooks/useFetchTokenBalance";
-import { IStakeInfo } from "./reducer";
-import { useWeb3React } from "@web3-react/core";
-import { useSetApplicationStatus } from "../app/hooks";
+import { useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setTokenDetails, TypeInput } from './action'
+import { AppState } from '../index'
+import useFetchTokenBalance from '../../hooks/useFetchTokenBalance'
+import { IStakeInfo } from './reducer'
+import { useWeb3React } from '@web3-react/core'
+import { useSetApplicationStatus } from '../app/hooks'
 import useTokenContract, {
   useUnifarmV1Contract,
   useUnifarmV2Contract
-} from "../../hooks/useTokenContract";
-import { getExactAddress } from "../../utils";
+} from '../../hooks/useTokenContract'
+import { getExactAddress } from '../../utils'
+import useUserMaxStake from '../../hooks/useUserMaxStake'
+import { useResetData, useResetPool } from '../pools/hooks'
 
 export const useSetTokenDetails = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const setSelectedTokenDetails = (dispatchArgs: IStakeInfo) => {
-    if (!dispatchArgs) return null;
-    return dispatch(setTokenDetails(dispatchArgs));
-  };
+    if (!dispatchArgs) return null
+    return dispatch(setTokenDetails(dispatchArgs))
+  }
 
-  return { setSelectedTokenDetails };
-};
+  return { setSelectedTokenDetails }
+}
 
 export const useSelectedTokens = () => {
   const state = useSelector((state: AppState) => {
-    return state.stakeReducer;
-  });
-  return state;
-};
+    return state.stakeReducer
+  })
+  return state
+}
 
 export const useOnChange = () => {
-  const state = useSelectedTokens();
+  const state = useSelectedTokens()
 
-  const {
-    setAppError,
-    setAppSuccess,
-    setApploader
-  } = useSetApplicationStatus();
+  const { setAppError, setAppSuccess, setApploader } = useSetApplicationStatus()
 
-  const { library, account } = useWeb3React();
+  const { library, account } = useWeb3React()
 
-  const getBalance = useFetchTokenBalance(state.tokenAddress);
-  const dispatch = useDispatch();
+  const getBalance = useFetchTokenBalance(state.tokenAddress)
+  const getUsermaxStake = useUserMaxStake(state.tokenAddress)
+  console.log(getUsermaxStake)
+  const dispatch = useDispatch()
+
+  const { setReset }: any = useResetPool()
+  const isFulllied = useResetData()
 
   const onInputChange = (value: number) => {
-    if (!state.isSelected) return null;
+    if (!state.isSelected) return null
 
-    setAppError(false, null);
+    setAppError(false, null)
 
     dispatch(
       TypeInput({
         stakingAmount: value
       })
-    );
-  };
+    )
 
-  const unifarmV1Instance = useUnifarmV1Contract();
-  const unifarmV2Instance = useUnifarmV2Contract();
+    if (isFulllied.fullfilled) {
+      setReset(true)
+    }
+  }
 
-  const instance = useTokenContract(state.tokenAddress);
+  const unifarmV1Instance = useUnifarmV1Contract()
+  const unifarmV2Instance = useUnifarmV2Contract()
+
+  const instance = useTokenContract(state.tokenAddress)
 
   const onApprove = async (typeFor: string) => {
-    const getApprovalAddress = getExactAddress(typeFor);
-    const parseTokens = library.utils.toWei(state.stakingAmount.toString());
+    const getApprovalAddress = getExactAddress(typeFor)
+    const parseTokens = library.utils.toWei(state.stakingAmount.toString())
 
     try {
       // setApp loader
-      setApploader(true);
+      setApploader(true)
       await instance.methods.approve(getApprovalAddress, parseTokens).send({
         from: account
-      });
+      })
       // dispatch applciation success here.
-      setAppSuccess(true, "Approve Successfully");
+      setAppSuccess(true, 'Approve Successfully')
     } catch (err) {
-      setAppError(true, err.message);
-      setApploader(false);
+      setAppError(true, err.message)
+      setApploader(false)
     }
-  };
+  }
 
   const onStake = async (typeFor: string) => {
-    const parseTokens = library.utils.toWei(state.stakingAmount.toString());
+    const parseTokens = library.utils.toWei(state.stakingAmount.toString())
 
-    if (typeFor === "v1") {
+    if (typeFor === 'v1') {
       try {
         // setApp loader
-        setApploader(true);
+        setApploader(true)
 
         await unifarmV1Instance.methods
           .stake(state.tokenAddress, parseTokens)
           .send({
             from: account
-          });
+          })
         // dispatch applciation success here.
-        setAppSuccess(true, "Stake Successfully");
-        setApploader(false);
+        setAppSuccess(true, 'Stake Successfully')
+
+        setApploader(false)
       } catch (err) {
-        setAppError(true, err.message);
+        setAppError(true, err.message)
       }
     } else {
       try {
         // setApp loader
-        setApploader(true);
-        const referal = "0xF6C172dd45ABd82E1F067801B309A7fFC4977971";
+        setApploader(true)
+        const referal = '0xF6C172dd45ABd82E1F067801B309A7fFC4977971'
 
         await unifarmV2Instance.methods
           .stake(referal, state.tokenAddress, parseTokens)
           .send({
             from: account
-          });
+          })
         // dispatch applciation success here.
-        setAppSuccess(true, "Approve Successfully");
-        setApploader(false);
+        setAppSuccess(true, 'Approve Successfully')
+        setApploader(false)
       } catch (err) {
-        setAppError(true, err.message);
+        setAppError(true, err.message)
       }
     }
-  };
+  }
 
   return {
     onInputChange,
     onApprove,
     onStake
-  };
-};
+  }
+}

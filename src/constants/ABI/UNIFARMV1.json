@@ -1,5 +1,12 @@
 [
   {
+    "inputs": [
+      { "internalType": "address", "name": "_owner", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -53,6 +60,19 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
     "type": "event"
   },
   {
@@ -149,6 +169,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "DAYS",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -160,7 +193,8 @@
       { "internalType": "address", "name": "tokenAddress", "type": "address" },
       { "internalType": "uint256", "name": "userMaxStake", "type": "uint256" },
       { "internalType": "uint256", "name": "totalStake", "type": "uint256" },
-      { "internalType": "uint8", "name": "decimal", "type": "uint8" }
+      { "internalType": "uint8", "name": "decimal", "type": "uint8" },
+      { "internalType": "bool", "name": "whiteListStatus", "type": "bool" }
     ],
     "name": "addToken",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
@@ -199,9 +233,42 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "internalType": "uint8", "name": "lockableStatus", "type": "uint8" },
+      { "internalType": "uint256", "name": "lockedDays", "type": "uint256" },
+      { "internalType": "bool", "name": "optionableStatus", "type": "bool" }
+    ],
+    "name": "lockableToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "optionableBenefit",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "refPercentage",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -247,6 +314,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "referrerAddress",
+        "type": "address"
+      },
       { "internalType": "address", "name": "tokenAddress", "type": "address" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
@@ -302,7 +374,9 @@
         "name": "userStakeLimit",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "maxStake", "type": "uint256" }
+      { "internalType": "uint256", "name": "maxStake", "type": "uint256" },
+      { "internalType": "uint256", "name": "lockableDays", "type": "uint256" },
+      { "internalType": "bool", "name": "optionableStatus", "type": "bool" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -370,6 +444,24 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "benefit", "type": "uint256" }
+    ],
+    "name": "updateOptionableBenefit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "refPer", "type": "uint256" }
+    ],
+    "name": "updateRefPercentage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "address", "name": "stakedToken", "type": "address" },
       {
         "internalType": "address[]",
@@ -395,11 +487,43 @@
     "inputs": [
       { "internalType": "address", "name": "tokenAddress", "type": "address" },
       { "internalType": "uint256", "name": "userMaxStake", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalStake", "type": "uint256" }
+      { "internalType": "uint256", "name": "totalStake", "type": "uint256" },
+      { "internalType": "bool", "name": "whiteListStatus", "type": "bool" }
     ],
     "name": "updateToken",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "tokenlist", "type": "address[]" },
+      { "internalType": "bool[]", "name": "status", "type": "bool[]" }
+    ],
+    "name": "updateTokenWhiteList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "tokenlist", "type": "address[]" },
+      { "internalType": "address[]", "name": "users", "type": "address[]" },
+      { "internalType": "bool[]", "name": "status", "type": "bool[]" }
+    ],
+    "name": "updateUserWhiteList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "name": "userTotalStaking",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -430,11 +554,29 @@
     "name": "viewStakingDetails",
     "outputs": [
       { "internalType": "address[]", "name": "", "type": "address[]" },
+      { "internalType": "address[]", "name": "", "type": "address[]" },
       { "internalType": "bool[]", "name": "", "type": "bool[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
       { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "whiteListTokenStatus",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "name": "whiteListUserStatus",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   }
