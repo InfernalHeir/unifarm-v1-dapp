@@ -10,7 +10,6 @@ import { useUnifarmV2Contract } from '../../../hooks/useTokenContract'
 import firebase from '../../../firebaseConfig'
 import { useStakingDataOnLoadOrPropsReceive } from '../../../store/info/hooks'
 import NotConnected from '../../NotConnected'
-import { useAppsStatus } from '../../../store/app/hooks'
 
 const StakedDetails = () => {
   const [rewardPunish, setRewardPunish] = useState<boolean>(false)
@@ -18,8 +17,6 @@ const StakedDetails = () => {
   const [stakingDetails, setStakingDetails] = useState<any[] | null>()
 
   const { active, library, account } = useWeb3React()
-
-  const appState = useAppsStatus()
 
   const [config, setConfig] = useState<{
     isLoading: boolean

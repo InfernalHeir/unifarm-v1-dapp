@@ -1,24 +1,12 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ModalTypes } from './reducer'
 
-export const setApplicationError = createAction<{
-  appError: boolean
-  message?: string
-}>('app/setApplicationError')
-
-export const setOpenModal = createAction<{ openModal: boolean }>(
+export const setOpenModal = createAction<{ openModal: ModalTypes }>(
   'app/setOpenModal'
 )
-
-export const setCloseModal = createAction<{ openModal: boolean }>(
+export const setCloseModal = createAction<{ openModal: null }>(
   'app/setCloseModal'
 )
-
-export const setApplicationSuccess = createAction<{
-  appSuccess: boolean
-  message?: string
-}>('app/setApplicationSuccess')
-
-export const setLoader = createAction<{ loading: boolean }>('app/setLoader')
-export const setApproveModal = createAction<{ appRoveModal: boolean }>(
-  'app/setApproveModal'
+export const setLoader = createAction<{ globalLoader: boolean }>(
+  'app/setLoader'
 )

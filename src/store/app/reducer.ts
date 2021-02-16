@@ -1,74 +1,40 @@
 import { createReducer } from '@reduxjs/toolkit'
-import {
-  setApplicationError,
-  setApplicationSuccess,
-  setApproveModal,
-  setCloseModal,
-  setLoader,
-  setOpenModal
-} from './action'
+
+import { setCloseModal, setLoader, setOpenModal } from './action'
+
+export enum ModalTypes {
+  WALLET,
+  PENDING_TX,
+  APPROVE_STAKE
+}
 
 interface IAppState {
-  appError: boolean
-  appSuccess: boolean
-  message?: string | null
-  openModal: boolean
-  appRoveModal: boolean
-  loading?: boolean
+  openModal: ModalTypes | null
+  globalLoader?: boolean
 }
 
 const initialAppState: IAppState = {
-  appError: false,
-  appSuccess: false,
-  message: null,
-  openModal: false,
-  appRoveModal: false,
-  loading: false
+  openModal: null,
+  globalLoader: false
 }
 
 export const app = createReducer<IAppState>(initialAppState, (builder) => {
-  builder.addCase(
-    setApplicationError,
-    (state, { payload: { appError, message } }) => {
-      return {
-        ...state,
-        appError,
-        message
-      }
+  builder.addCase(setOpenModal, (state, { payload: { openModal } }) => {
+    return {
+      ...state,
+      openModal
     }
-  ),
-    builder.addCase(setOpenModal, (state, { payload: { openModal } }) => {
-      return {
-        ...state,
-        openModal
-      }
-    }),
+  }),
     builder.addCase(setCloseModal, (state, { payload: { openModal } }) => {
       return {
         ...state,
         openModal
       }
     }),
-    builder.addCase(setLoader, (state, { payload: { loading } }) => {
+    builder.addCase(setLoader, (state, { payload: { globalLoader } }) => {
       return {
         ...state,
-        loading
-      }
-    }),
-    builder.addCase(
-      setApplicationSuccess,
-      (state, { payload: { appSuccess, message } }) => {
-        return {
-          ...state,
-          appSuccess,
-          message
-        }
-      }
-    ),
-    builder.addCase(setApproveModal, (state, { payload: { appRoveModal } }) => {
-      return {
-        ...state,
-        appRoveModal
+        globalLoader
       }
     })
 })

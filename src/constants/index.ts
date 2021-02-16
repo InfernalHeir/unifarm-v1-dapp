@@ -1,6 +1,12 @@
-import { injected } from '../connectors'
+import { injected, trustwallet } from '../connectors'
+
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import MetamaskLogo from '../assests/images/metamask.png'
+// connectors logo
+import MetamaskLogo from '../assests/images/connectors/metamask.png'
+import TrustWalletLogo from '../assests/images/connectors/trustWallet.png'
+import CoinbaseConnectLogo from '../assests/images/connectors/coinbaseWalletIcon.svg'
+
+// Token List Icon can be fetch from there
 import OROIcon from '../assests/images/oro.png'
 import NORD from '../assests/images/nord.png'
 import MATICIcon from '../assests/images/Sidechain/matic.png'
@@ -20,8 +26,10 @@ interface IWallet {
     logoUri: string
     name: string
     connector: AbstractConnector
+    url?: string
     description: string
     isMobileSupported: boolean
+    isMobileSupportOnly: boolean
   }
 }
 // you can add further diffrent providers.
@@ -31,7 +39,25 @@ export const WALLETS: IWallet = {
     name: 'Metamask',
     connector: injected,
     description: 'Chrome Extension Trusted By 10 Million Users.',
-    isMobileSupported: false
+    isMobileSupported: true,
+    isMobileSupportOnly: false
+  },
+  TRUSTWALLET: {
+    logoUri: TrustWalletLogo,
+    name: 'Trust Wallet',
+    connector: trustwallet,
+    description: 'Using Trust Wallet & Rainbow Wallet',
+    isMobileSupported: true,
+    isMobileSupportOnly: false
+  },
+  COINBASECONNECT: {
+    logoUri: CoinbaseConnectLogo,
+    name: 'Coinbase Dapp Wallet',
+    connector: injected,
+    description: 'Open in Coinbase Dapp Wallet Browser',
+    url: 'https://go.cb-w.com/mtUDhEZPy1',
+    isMobileSupported: true,
+    isMobileSupportOnly: true
   }
 }
 
