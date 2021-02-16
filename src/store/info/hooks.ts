@@ -6,8 +6,9 @@ import {
   useUnifarmV2Contract
 } from '../../hooks/useTokenContract'
 import { setUserStakingDetails } from './actions'
-import firebase from '../../firebaseConfig'
 import { useWeb3React } from '@web3-react/core'
+
+// fetching details from both pool
 
 const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
   if (!account || !unifarmV1) return null
@@ -22,10 +23,8 @@ const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
     const stakeDetails = await unifarmV1.methods
       .viewStakingDetails(account)
       .call()
-
     // staking details.
     // it also array.
-
     const tokenAddress = stakeDetails[0]
     const isActive = stakeDetails[1]
     const stakeIDs = stakeDetails[2]
@@ -33,7 +32,6 @@ const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
     const DaysStaked = stakeDetails[4]
 
     // this get poolName and Poolimages from token sequnces
-
     const sequenceListEveryStake = {}
     const rewardEachStake = {}
     const sequenceListImages = {}
@@ -164,27 +162,6 @@ const getStakingDetailsV2 = async (unifarmV2: any, account: string) => {
   }
 }
 
-const getFireBaseUnstakeData = async () => {
-  try {
-    const unStakeData = []
-
-    const ref = firebase.database().ref('blockHashTable')
-    ref.on('value', (snapshot) => {
-      // console.log('firebase response here', snapshot);
-      if (snapshot && snapshot.exists()) {
-        const obj = snapshot.val()
-        for (let id in obj) {
-          unStakeData.push(obj[id])
-        }
-      }
-    })
-
-    return { unStakeData }
-  } catch (err) {
-    console.log(err.message)
-  }
-}
-
 export const useStakingDataOnLoadOrPropsReceive = () => {
   // dispatch
   const dispatch = useDispatch()
@@ -214,17 +191,9 @@ export const useStakingDataOnLoadOrPropsReceive = () => {
         console.log(err)
       })
 
-    let unStakeObj
-
-    getFireBaseUnstakeData().then((result) => {
-      unStakeObj = result
-    })
-
     dispatch(
       setUserStakingDetails({
-        stakeLoader: false,
-        stakingPayload: globalArray,
-        unStakeData: unStakeObj
+        stakingPayload: globalArray
       })
     )
   }, [account])
@@ -232,6 +201,6 @@ export const useStakingDataOnLoadOrPropsReceive = () => {
 
 export const useSelectStakingDetails = () => {
   return useSelector((state: AppState) => {
-    return state.InfoReducer
+    return state.info
   })
 }

@@ -2,14 +2,14 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { app } from './app/reducer'
 import { stakeReducer } from './stake/reducer'
 import { poolReducer } from './pools/reducer'
-import { InfoReducer } from './info/reducer'
+import { info } from './info/reducer'
 import { transaction } from './transactions/reducer'
 
 const reducers = {
   app,
   stakeReducer,
   poolReducer,
-  InfoReducer,
+  info,
   transaction
 }
 
