@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assests/images/logo.svg";
+import logo from "../../assests/images/brand/logo.svg";
 import styled from "styled-components";
 
 const Slogan = styled.div`

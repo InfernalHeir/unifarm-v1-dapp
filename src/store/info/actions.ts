@@ -1,10 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
-import { StakingInfo } from './reducer'
+import { StakeInfoData } from './reducer'
 
-export const setUserStakingDetails = createAction<StakingInfo>(
-  'info/setUserStakingDetails'
-)
-
-export const setUserUnStakingDetails = createAction<StakingInfo>(
-  'info/setUserUnStakingDetails'
-)
+export const setUserStakingDetails = createAction<{
+  stakingPayload: StakeInfoData[]
+}>('info/setUserStakingDetails')

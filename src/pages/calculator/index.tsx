@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react'
 import AppBody from '../AppBody'
 import styled from 'styled-components'
@@ -8,6 +9,18 @@ import { ShowMePools } from '../../components/Buttons'
 import { useWeb3React } from '@web3-react/core'
 import CalculatorRewards from '../../components/CalculotorRewards'
 import { useOnChange, useSelectedTokens } from '../../store/stake/hooks'
+=======
+import React, { useState, useEffect } from "react";
+import AppBody from "../AppBody";
+import styled from "styled-components";
+import { Typography } from "../../components/Typo";
+import TokenSearchModal from "../../components/TokenSearhModal";
+import { IoIosArrowDropdown } from "react-icons/io";
+import { ShowMePools } from "../../components/Buttons";
+import { useWeb3React } from "@web3-react/core";
+import CalculatorRewards from "../../components/CalculotorRewards";
+import { useStakeActions, useDerivedStakeInfo } from "../../store/stake/hooks";
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 
 const CalculatorWrapper = styled.div`
   max-width: 550px;
@@ -62,9 +75,15 @@ const Calculator = () => {
 
   const [showCalculotor, setShowCalculotor] = useState<boolean>(false)
 
+<<<<<<< HEAD
   const selectedCurrency: any = useSelectedTokens()
 
   const { onInputChange } = useOnChange()
+=======
+  const selectedCurrency = useDerivedStakeInfo();
+
+  const { onInputChange } = useStakeActions();
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 
   const { active, account } = useWeb3React()
 

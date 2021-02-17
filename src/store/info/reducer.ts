@@ -2,49 +2,40 @@ import { createReducer } from '@reduxjs/toolkit'
 import { setUserStakingDetails } from './actions'
 
 export interface StakeInfoData {
-  Mystakes: number
+  Mystakes: number[]
   DaysStaked: number[]
   poolName?: string
-  tokenNames?: any[]
-  stakeID?: any[]
-  stakedAmount?: any[]
-  isActive?: any[]
+  tokenNames?: string[]
+  stakeID?: number[]
+  isActive?: boolean[]
   poolIcon?: string
   rewardsSequenceSrc?: string[]
   myRewards: number[]
-  Apy?: string | null
+  Apy?: string
   lockIn?: string
   maxStakingLimit: number
   network?: string
   isUnstakeDisable?: boolean
   typeFor?: string
   isLockIn?: boolean // 2x
-  unStakeData?: any[]
 }
 
 export interface StakingInfo {
-  stakeLoader: boolean
-  stakingPayload?: StakeInfoData[] | null
-  unStakeData?: null | object
+  stakingPayload?: StakeInfoData[]
 }
 
-const InitialStakeInfoStake: StakingInfo = {
-  stakeLoader: false,
-  stakingPayload: null
+const initialStake: StakingInfo = {
+  stakingPayload: []
 }
 
-export const InfoReducer = createReducer<StakingInfo>(
-  InitialStakeInfoStake,
-  (builder) => {
-    builder.addCase(
-      setUserStakingDetails,
-      (state, { payload: { stakeLoader, stakingPayload, unStakeData } }) => {
-        return {
-          stakeLoader,
-          stakingPayload,
-          unStakeData
-        }
+export const info = createReducer<StakingInfo>(initialStake, (builder) => {
+  builder.addCase(
+    setUserStakingDetails,
+    (state, { payload: { stakingPayload } }) => {
+      return {
+        ...state,
+        stakingPayload
       }
-    )
-  }
-)
+    }
+  )
+})

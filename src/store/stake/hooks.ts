@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { InputMaxButton, setTokenDetails, TypeInput } from './action'
@@ -18,17 +19,40 @@ import { ModalTypes } from '../app/reducer'
 
 export const useSetTokenDetails = () => {
   const dispatch = useDispatch()
+=======
+import { useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { InputMaxButton, setTokenDetails, TypeInput } from "./action";
+import { AppState } from "../index";
+//import useFetchTokenBalance from "../../hooks/useFetchTokenBalance";
+import { IStakeInfo } from "./reducer";
+import { useWeb3React } from "@web3-react/core";
+import useTokenContract, {
+  useUnifarmV1Contract,
+  useUnifarmV2Contract
+} from "../../hooks/useTokenContract";
+import { getExactAddress } from "../../utils";
+/* import { useResetData, useResetPool } from "../pools/hooks";
+import { useSetTransactionStatus } from "../transactions/hooks";
+import { TXSTATUS } from "../transactions/reducer";
+import { useOpenPendingTxModal, useCloseModal } from "../app/hooks";
+import { ModalTypes } from "../app/reducer"; */
+
+export const useSetTokenDetails = () => {
+  const dispatch = useDispatch();
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 
   const setSelectedTokenDetails = (dispatchArgs: IStakeInfo) => {
-    if (!dispatchArgs) return null
-    return dispatch(setTokenDetails(dispatchArgs))
-  }
+    if (!dispatchArgs) return null;
+    return dispatch(setTokenDetails(dispatchArgs));
+  };
 
-  return { setSelectedTokenDetails }
-}
+  return { setSelectedTokenDetails };
+};
 
-export const useSelectedTokens = () => {
+export const useDerivedStakeInfo = () => {
   const state = useSelector((state: AppState) => {
+<<<<<<< HEAD
     return state.stakeReducer
   })
   return state
@@ -52,10 +76,42 @@ export const useOnChange = () => {
   const onInputChange = (value: number) => {
     if (!state.isSelected) return null
 
+=======
+    return state.stakeReducer;
+  });
+  return state;
+};
+
+export const useStakeActions = () => {
+  const { stakingAmount, tokenAddress } = useDerivedStakeInfo();
+  const { library, account } = useWeb3React();
+  const dispatch = useDispatch();
+  const instance = useTokenContract(tokenAddress);
+  const unifarmv1 = useUnifarmV1Contract();
+  const unifarmv2 = useUnifarmV2Contract();
+
+  const onInputChange = useCallback(
+    (value: number) => {
+      if (!library && !account) return null;
+      dispatch(
+        TypeInput({
+          stakingAmount: value
+        })
+      );
+    },
+    [stakingAmount]
+  );
+
+  const onMaxButton = useCallback(async () => {
+    if (tokenAddress) return null;
+    const balance = await instance.methods.balanceOf(account).call();
+    const parseBalance = library.utils.fromWei(balance);
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
     dispatch(
-      TypeInput({
-        stakingAmount: value
+      InputMaxButton({
+        stakingAmount: parseBalance
       })
+<<<<<<< HEAD
     )
 
     if (isFulllied.fullfilled) {
@@ -161,15 +217,54 @@ export const useOnChange = () => {
     // call unstake method
     // first set the modal open the call this function
     await unifarmInstance.methods.unStake(stakeId).send({
+=======
+    );
+  }, [tokenAddress]);
+
+  const onApprove = useCallback(
+    async (typeFor: string) => {
+      const approvalAddress = getExactAddress(typeFor);
+      const parseTokens = library.utils.toWei(stakingAmount);
+      await instance.methods.approve(approvalAddress, parseTokens).send({
+        from: account
+      });
+    },
+    [tokenAddress]
+  );
+
+  const onV1Stake = useCallback(async () => {
+    const parseTokens = library.utils.toWei(stakingAmount);
+    if (!tokenAddress || !stakingAmount) return null;
+    await unifarmv1.methods.stake(tokenAddress, parseTokens).send({
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
       from: account
-    })
-  }
+    });
+  }, [stakingAmount]);
+
+  const onV2Stake = useCallback(async () => {
+    const parseTokens = library.utils.toWei(stakingAmount);
+    if (!tokenAddress || !stakingAmount) return null;
+    const refferalAddress = "0xF6C172dd45ABd82E1F067801B309A7fFC4977971";
+    await unifarmv2.methods
+      .stake(refferalAddress, tokenAddress, parseTokens)
+      .send({
+        from: account
+      });
+  }, [stakingAmount]);
 
   return {
     onInputChange,
+    onMaxButton,
     onApprove,
+<<<<<<< HEAD
     onStake,
     onUnStake,
     onMaxButton
   }
 }
+=======
+    onV1Stake,
+    onV2Stake
+  };
+};
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc

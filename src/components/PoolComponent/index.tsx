@@ -1,36 +1,60 @@
+<<<<<<< HEAD
 import { blue } from '@material-ui/core/colors'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useOnChange } from '../../store/stake/hooks'
+=======
+import { blue } from "@material-ui/core/colors";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { useStakeActions } from "../../store/stake/hooks";
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 //import ApproveModal from '../ApproveModal'
 
 const StyledPoolIcon = styled.img`
   width: 30px;
   margin-left: 5px;
-`
+`;
 
 const StyledPoolName = styled.h5`
   font-weight: 800;
-`
+`;
 
 const Grid = styled.div`
-  display: grid;
-  grid-template-row: repeat(5);
-`
+  padding: 12px;
+`;
 
+<<<<<<< HEAD
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
   const { onStake, onApprove }: any = useOnChange()
+=======
+const PoolCard = styled.div`
+  background: #f1f1f1;
+  width: 100%;
+  border: 1px solid #dedede;
+  margin: auto;
+  border-radius: 14px;
+  padding: 14px;
+`;
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 
+const PoolComponent = ({ showRewards }: { showRewards: any }) => {
+  const { onV1Stake, onApprove } = useStakeActions();
   const [config, setConfig] = useState<{
-    type?: string | null
-    openModal: boolean
+    type?: string | null;
+    openModal: boolean;
   }>({
     openModal: false
+<<<<<<< HEAD
   })
+=======
+  });
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
 
   return (
-    <div>
+    <PoolCard>
       {showRewards
         ? showRewards.map((item, index) => {
             return (
@@ -38,7 +62,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                 <div className="col-lg-3">
                   <div
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                   >
                     <StyledPoolIcon src={item.poolIcon} alt={item.poolName} />
                     <br />
@@ -49,11 +73,18 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                   <div
                     className="my-stack-list total-stack-point box-shadow blue-border-hover"
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                   >
                     <div className="btn scale btn_lg_primary1  br-10 effect-letter rounded-4">
                       {item.rewardsSequenceSrc.map((img) => {
-                        return <img src={img} width="30" alt={index} />
+                        return (
+                          <img
+                            src={img}
+                            style={{ marginRight: "5px" }}
+                            width="30"
+                            alt={index}
+                          />
+                        );
                       })}
                     </div>
                   </div>
@@ -74,7 +105,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                       <div>
                                         <b>APY</b>
                                         <br />
-                                        <span>{item.Apy}</span>
+                                        <span>{`${item.Apy}%`}</span>
                                       </div>
                                     </div>
                                     <div className="col-md-2">
@@ -82,7 +113,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                         <b>Lock In</b>
                                         <br />
                                         <span>
-                                          {item.lockIn ? item.lockIn : '0'} Days
+                                          {item.lockIn ? item.lockIn : "0"} Days
                                         </span>
                                       </div>
                                     </div>
@@ -109,26 +140,28 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                                 <div className="col-lg-8 row mt-3">
                                   <>
-                                    {item.rewards.selectedTokenRewardByOtherV1.map(
-                                      (value, key) => {
-                                        return (
-                                          <Grid key={key}>
-                                            <div>
-                                              <img width="20" />
-                                            </div>
-                                            <div>
-                                              <p style={{ marginBottom: 0 }}>
-                                                <b>ORO</b>
-                                              </p>
-                                            </div>
+                                    {item.rewards.map((value, key) => {
+                                      return (
+                                        <Grid key={key}>
+                                          <div>
+                                            <img src={value.image} width="20" />
+                                          </div>
+                                          <div>
+                                            <p style={{ marginBottom: 0 }}>
+                                              <b>{value.name}</b>
+                                            </p>
+                                          </div>
 
-                                            <div>
-                                              <p>{value.toFixed(4)}</p>
-                                            </div>
-                                          </Grid>
-                                        )
-                                      }
-                                    )}
+                                          <div>
+                                            <p>
+                                              {Number(
+                                                value.rewardsPerDay
+                                              ).toFixed(4)}
+                                            </p>
+                                          </div>
+                                        </Grid>
+                                      );
+                                    })}
                                   </>
                                 </div>
 
@@ -136,8 +169,8 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                                 <div className="col-md-4 select-unstaike-button">
                                   <Link
                                     style={{
-                                      background: 'transparent',
-                                      color: 'blue'
+                                      background: "transparent",
+                                      color: "blue"
                                     }}
                                     to={item.moreDetailsRoute}
                                   >
@@ -146,7 +179,11 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                                   <button
                                     onClick={() => {
+<<<<<<< HEAD
                                       onApprove('v1')
+=======
+                                      onApprove("v1");
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc
                                     }}
                                     className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
                                     style={{
@@ -168,10 +205,18 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
                   </div>
                 </div>
               </div>
-            )
+            );
           })
+<<<<<<< HEAD
         : ''}
     </div>
   )
 }
 export default PoolComponent
+=======
+        : ""}
+    </PoolCard>
+  );
+};
+export default PoolComponent;
+>>>>>>> b372e57e5d43d74ccdb35fb65dfb404c8d8842dc

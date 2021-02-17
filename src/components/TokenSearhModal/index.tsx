@@ -6,8 +6,10 @@ import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import { AiOutlineClose } from "react-icons/ai";
 import IconButton from "@material-ui/core/IconButton";
-import { SupportedTokens } from "../../constants/index";
+import { tokenlist } from "../../constants/index";
 import { useSetTokenDetails } from "../../store/stake/hooks";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 
 interface ITokenSearchModal {
   isOpen: boolean;
@@ -46,44 +48,69 @@ const FlexHeader = styled.div`
   justify-content: space-between;
 `;
 
-const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
-  const { setSelectedTokenDetails } = useSetTokenDetails();
+const useStyles = makeStyles((theme) => ({
+  textfield: {
+    width: "96%",
+    marginLeft: 10
+  },
+  btnStyle: {
+    borderRadius: 20,
+    width: 440,
+    height: 55,
+    justifyContent: "space-between",
+    color: "black",
+    border: "1px solid rgba(0, 0, 0, 0.23)"
+  },
+  dilogTitle: {
+    display: "flex",
+    justifyContent: "space-between"
+  }
+}));
 
+const TokenSearchModal = ({ isOpen, close }: ITokenSearchModal) => {
+  const { setSelectedTokenDetails } = useSetTokenDetails();
+  const classes = useStyles();
   return (
     <Modal isOpen={isOpen} close={close}>
       <FlexHeader>
-        <DiglogHeader>{heading}</DiglogHeader>
+        <DiglogHeader>Select Your Token</DiglogHeader>
         <IconButton onClick={close}>
           <AiOutlineClose />
         </IconButton>
       </FlexHeader>
+
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        placeholder="Search Your Token"
+        className={classes.textfield}
+      />
+
       <Divider />
-      {Object.keys(SupportedTokens).map((key) => {
-        const token = SupportedTokens[key];
+
+      {tokenlist.tokenMetaData.map((item) => {
         return (
-          <List key={token.key}>
+          <List key={item.key}>
             <ListItemWrapper
               isSelected={false}
               onClick={() => {
                 return (
                   setSelectedTokenDetails({
-                    decimals: token.decimals,
-                    tokenAddress: token.address,
-                    name: token.name,
-                    icon: token.icon,
+                    decimals: item.decimals,
+                    tokenAddress: item.address,
+                    name: item.name,
+                    icon: item.icon,
                     isSelected: true,
-                    v1: token.v1,
-                    v2: token.v2
+                    v1: item.isV1,
+                    v2: item.isV2
                   }),
                   close()
                 );
               }}
             >
-              {token.icon && (
-                <StyledChainIcon src={token.icon} alt={token.name} />
-              )}
+              {item.icon && <StyledChainIcon src={item.icon} alt={item.name} />}
 
-              <StyledChainName>{token.name}</StyledChainName>
+              <StyledChainName>{item.name}</StyledChainName>
             </ListItemWrapper>
           </List>
         );
