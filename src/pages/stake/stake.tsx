@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import logo from "../../assests/images/brand/logo.svg";
 import styled from "styled-components";
+import UnifarmLogo from "../../components/UnifarmLogo";
+import AppBody from "../AppBody";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,62 +62,35 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     color: "black",
     border: "1px solid rgba(0, 0, 0, 0.23)"
+  },
+  calculate: {
+    textAlign: "center"
   }
 }));
-
-const PaperSurface = styled(Paper)`
-  border-radius: 50px 15px;
-  background: #f8f8ff;
-`;
 
 const Stake = () => {
   const classes = useStyles();
   return (
-    <Container maxWidth="sm">
-      <div className={classes.root}>
-        <PaperSurface elevation={3}>
-          <div className={classes.logo}>
-            <Avatar
-              variant="square"
-              src={logo}
-              className={classes.logoImage}
-              id="textFeildBorder"
-            >
-              UnifarmLogo
-            </Avatar>
-          </div>
-          <Typography variant="body1" gutterBottom>
-            "Stake one token, and earn Multiple tokens."
-          </Typography>
-          <div className={classes.inputDiv}>
-            <Typography variant="h5">Calculate Your Earnings</Typography>
-          </div>
-          <form>
-            <Button
-              variant="outlined"
-              color="primary"
-              className={classes.btnStyle}
-            >
-              <span>Select Token</span>
-            </Button>
-            <br />
-            <TextField
-              id="outlined-basic"
-              label="Enter No of Token"
-              variant="outlined"
-              className={classes.TextFieldclass}
-            />
-          </form>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.btnSubmit}
-          >
-            Show Me Available Pools
-          </Button>
-        </PaperSurface>
+    <AppBody logo={true}>
+      <div className={classes.inputDiv}>
+        <Typography variant="h5" className={classes.calculate}>
+          Calculate Your Earnings
+        </Typography>
       </div>
-    </Container>
+      <Button variant="outlined" color="primary" className={classes.btnStyle}>
+        <span>Select Token</span>
+      </Button>
+      <br />
+      <TextField
+        id="outlined-basic"
+        label="Enter No of Token"
+        variant="outlined"
+        className={classes.TextFieldclass}
+      />
+      <Button variant="contained" color="primary" className={classes.btnSubmit}>
+        Show Me Available Pools
+      </Button>
+    </AppBody>
   );
 };
 

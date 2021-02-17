@@ -1,54 +1,44 @@
 import React from "react";
 import UnifarmLogo from "../components/UnifarmLogo";
-import { useWeb3React } from "@web3-react/core";
-import { shortenAddress, getConnectorLogo } from "../utils";
-import { ProviderLogo } from "../components/Web3Modal";
-import { Link } from "react-router-dom";
-import { AccountDetails, Connect, ButtonGroup } from "../components/Buttons";
-import { useOpenWalletModal } from "../store/app/hooks";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import styled from "styled-components";
+import Paper from "@material-ui/core/Paper";
 
-const AppBody = ({
-  children,
-  logo
-}: {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    marginTop: "9rem",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    "& > *": {
+      margin: theme.spacing(1),
+      width: theme.spacing(60),
+      height: theme.spacing(55)
+    }
+  }
+}));
+
+const PaperSurface = styled(Paper)`
+  border-radius: 50px 15px;
+  background: #f8f8ff;
+`;
+
+interface IAppBody {
   children: React.ReactNode;
   logo?: boolean;
-}) => {
-  const { account, active, connector } = useWeb3React();
-
-  const setOpenWallet = useOpenWalletModal();
-
-  const ActiveProviderLogo = getConnectorLogo(connector);
-
+}
+const AppBody = ({ children, logo }: IAppBody) => {
+  const classes = useStyles();
   return (
-    <section className="form_signup_one home_page_list">
-      <div className="container w-100">
-        <div className="row">
-          <div className="col-md-12 ml-auto">
-            <div className="item_group">
-              {logo && <UnifarmLogo />}
-              <div className="col-12 text-right pb-2 mb-5 wallate-value">
-                {account && active ? (
-                  <>
-                    <AccountDetails onClick={setOpenWallet}>
-                      <ProviderLogo src={ActiveProviderLogo} alt="metamask" />
-                      {shortenAddress(account)}
-                    </AccountDetails>
-                    <ButtonGroup>
-                      <Link to="/staking-info">My Stakes</Link>
-                    </ButtonGroup>
-                  </>
-                ) : (
-                  <Connect onClick={setOpenWallet}>Connect</Connect>
-                )}
-              </div>
-
-              {children}
-            </div>
-          </div>
-        </div>
+    <Container maxWidth="sm">
+      <div className={classes.root}>
+        <PaperSurface>
+          {logo && <UnifarmLogo />}
+          {children}
+        </PaperSurface>
       </div>
-    </section>
+    </Container>
   );
 };
 

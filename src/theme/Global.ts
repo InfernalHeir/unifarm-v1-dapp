@@ -28,8 +28,10 @@ body::before {
   background-repeat: no-repeat;
 }
 
-
-
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
 `;
 
 export default Global;

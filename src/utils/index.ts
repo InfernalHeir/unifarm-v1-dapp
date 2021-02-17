@@ -5,7 +5,8 @@ import { injected, trustwallet } from "../connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import MetamaskLogo from "../assests/images/connectors/metamask.png";
 import TrustWalletLogo from "../assests/images/connectors/trustWallet.png";
-import { UnifarmV1Address, UnifarmV2Address } from "../constants";
+import { tokenListV1, UnifarmV1Address, UnifarmV2Address } from "../constants";
+import { Mapping } from "../constants";
 
 export const validateAddress = (address: string): string | false => {
   try {
@@ -56,4 +57,9 @@ export const getImages = (tokensSequence: string[]) => {
   for (var k = 0; k < tokensSequence.length; k++) {
     const address = tokensSequence[k];
   }
+};
+
+export const getTokenNameByAddress = (tokenAddress: string) => {
+  const getKey = getKeyByValue(tokenListV1, tokenAddress);
+  return Mapping[getKey].name;
 };
