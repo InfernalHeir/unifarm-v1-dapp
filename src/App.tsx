@@ -14,6 +14,7 @@ import StakeInfo from './pages/stakinginfo'
 import Web3 from 'web3'
 import Claim from './pages/claim'
 import SnackBarNotes from './components/SnackBarNotes'
+import PendingTransactions from './components/PendingTransactions'
 
 const App = () => {
   const getLibrary = (provider) => {
@@ -33,6 +34,7 @@ const App = () => {
             </Switch>
             <Web3Modal />
             <SnackBarNotes />
+            <PendingTransactions />
           </Web3ReactProvider>
         </ThemeProvider>
       </Provider>

@@ -1,29 +1,30 @@
-import React from "react";
-import UnifarmLogo from "../components/UnifarmLogo";
-import { useWeb3React } from "@web3-react/core";
-import { shortenAddress, getConnectorLogo } from "../utils";
-import { ProviderLogo } from "../components/Web3Modal";
-import { Link } from "react-router-dom";
+import React from 'react'
+import UnifarmLogo from '../components/UnifarmLogo'
+import { useWeb3React } from '@web3-react/core'
+import { shortenAddress, getConnectorLogo } from '../utils'
+import { ProviderLogo } from '../components/Web3Modal'
+import { Link } from 'react-router-dom'
 import {
   AccountDetails,
   Connect,
   MyStakesRewards,
   ButtonGroup
-} from "../components/Buttons";
-import { useTriggerOpenModal } from "../store/app/hooks";
+} from '../components/Buttons'
+//import { useTriggerOpenModal } from "../store/app/hooks";
+import { useOpenWalletModal } from '../store/app/hooks'
 
 const AppBody = ({
   children,
   logo
 }: {
-  children: React.ReactNode;
-  logo?: boolean;
+  children: React.ReactNode
+  logo?: boolean
 }) => {
-  const { account, active, connector } = useWeb3React();
+  const { account, active, connector } = useWeb3React()
 
-  const ActiveProviderLogo = getConnectorLogo(connector);
+  const setOpenWallet = useOpenWalletModal()
 
-  const open = useTriggerOpenModal();
+  const ActiveProviderLogo = getConnectorLogo(connector)
 
   return (
     <section className="form_signup_one home_page_list">
@@ -35,7 +36,7 @@ const AppBody = ({
               <div className="col-12 text-right pb-2 mb-5 wallate-value">
                 {account && active ? (
                   <>
-                    <AccountDetails onClick={open}>
+                    <AccountDetails onClick={setOpenWallet}>
                       <ProviderLogo src={ActiveProviderLogo} alt="metamask" />
                       {shortenAddress(account)}
                     </AccountDetails>
@@ -44,7 +45,7 @@ const AppBody = ({
                     </ButtonGroup>
                   </>
                 ) : (
-                  <Connect onClick={open}>Connect</Connect>
+                  <Connect onClick={setOpenWallet}>Connect</Connect>
                 )}
               </div>
 
@@ -54,7 +55,7 @@ const AppBody = ({
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default AppBody;
+export default AppBody

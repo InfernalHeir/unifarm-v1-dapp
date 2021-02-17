@@ -8,7 +8,6 @@ import {
 import { setUserStakingDetails } from './actions'
 import firebase from '../../firebaseConfig'
 import { useWeb3React } from '@web3-react/core'
-import { useSetApplicationStatus } from '../app/hooks'
 
 const getStakingDetailsV1 = async (unifarmV1: any, account: string) => {
   if (!account || !unifarmV1) return null
@@ -195,13 +194,10 @@ export const useStakingDataOnLoadOrPropsReceive = () => {
   const unifarmV1 = useUnifarmV1Contract()
   const unifarmV2 = useUnifarmV2Contract()
 
-  const { setApploader } = useSetApplicationStatus()
-
   useEffect(() => {
     // get the token Staking Details for v1
     // set App Loader Here.
     if (!unifarmV1 && !account) return null
-    setApploader(true)
 
     var globalArray = []
     getStakingDetailsV1(unifarmV1, account)
@@ -231,8 +227,6 @@ export const useStakingDataOnLoadOrPropsReceive = () => {
         unStakeData: unStakeObj
       })
     )
-
-    setApploader(false)
   }, [account])
 }
 

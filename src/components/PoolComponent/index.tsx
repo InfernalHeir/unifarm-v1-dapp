@@ -3,8 +3,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useOnChange } from '../../store/stake/hooks'
-import ApproveModal from '../ApproveModal'
-import { useAppsStatus, useSetApporveModal } from '../../store/app/hooks'
+//import ApproveModal from '../ApproveModal'
 
 const StyledPoolIcon = styled.img`
   width: 30px;
@@ -21,8 +20,7 @@ const Grid = styled.div`
 `
 
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
-  const { onStake }: any = useOnChange()
-  const state: any = useAppsStatus()
+  const { onStake, onApprove }: any = useOnChange()
 
   const [config, setConfig] = useState<{
     type?: string | null
@@ -30,12 +28,6 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
   }>({
     openModal: false
   })
-
-  const close = () => {
-    setConfig({
-      openModal: false
-    })
-  }
 
   return (
     <div>
@@ -154,10 +146,7 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
 
                                   <button
                                     onClick={() => {
-                                      setConfig({
-                                        type: item.typeFor,
-                                        openModal: true
-                                      })
+                                      onApprove('v1')
                                     }}
                                     className="btn scale btn_lg_primary unstake-claim bg-dark-purple br-10 c-white effect-letter rounded-4"
                                     style={{
@@ -182,11 +171,6 @@ const PoolComponent = ({ showRewards }: { showRewards: any }) => {
             )
           })
         : ''}
-      <ApproveModal
-        isOpen={config.openModal}
-        close={() => close()}
-        typeFor={config.type}
-      />
     </div>
   )
 }

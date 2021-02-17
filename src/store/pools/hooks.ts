@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setLoader } from '../app/action'
 import { setDailyRewardsDistrubution, setReset } from '../pools/action'
 import { formatEther } from '@ethersproject/units'
-import { useSetApplicationStatus } from '../app/hooks'
 import { useWeb3React } from '@web3-react/core'
 import {
   SupportedTokens,
@@ -59,7 +58,6 @@ export const usePoolData = () => {
   // selected tokens
   const selectedTokens = useSelectedTokens()
   const { library } = useWeb3React()
-  const { setAppError, setApploader, setAppSuccess } = useSetApplicationStatus()
   // dispatch
   const dispatch = useDispatch()
 
@@ -304,7 +302,6 @@ export const usePoolData = () => {
     // show for both pools
     if (!selectedTokens.stakingAmount || !selectedTokens.tokenAddress)
       return null
-    setApploader(true)
 
     if (selectedTokens.v1 && selectedTokens.v2) {
       // fetch the v1 data first
@@ -321,8 +318,6 @@ export const usePoolData = () => {
           poolData: globalArray
         })
       )
-
-      setApploader(false)
     } else if (selectedTokens.v1) {
       var globalArray = []
 
@@ -336,8 +331,6 @@ export const usePoolData = () => {
           poolData: globalArray
         })
       )
-
-      setApploader(false)
     } else if (selectedTokens.v2) {
       var globalArray = []
 
@@ -351,8 +344,6 @@ export const usePoolData = () => {
           poolData: globalArray
         })
       )
-
-      setApploader(false)
     }
   }
   return { getPoolInfo }

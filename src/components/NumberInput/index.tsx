@@ -11,6 +11,7 @@ const InputWrapper = styled.div`
   border-radius: 9px;
   border: 1px solid #2222227a;
   padding: 0.5rem;
+  position: relative;
 `
 
 const Input = styled.input`
@@ -29,7 +30,6 @@ text-overflow: ellipsis;
 padding: 0px;
 -webkit-appearance: textfield;
 appearance: textfield;
-text-align: end;
 }
 `
 
@@ -44,6 +44,15 @@ display: flex;
 align-items:center;
 }
 `
+const MaxButton = styled.button`
+  background: #197bc2;
+  color: white;
+  font-size: 14px;
+  border: 0;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+`
 
 const NumberInput = () => {
   const [isOpen, setOpen] = useState<boolean>(false)
@@ -52,7 +61,7 @@ const NumberInput = () => {
 
   const selectedToken = useSelectedTokens()
 
-  const { onInputChange }: any = useOnChange()
+  const { onInputChange, onMaxButton }: any = useOnChange()
   const open = useCallback(() => {
     setOpen(true)
   }, [isOpen])
@@ -85,7 +94,11 @@ const NumberInput = () => {
           disabled={!active || !selectedToken.tokenAddress}
           placeholder="Staking Amount"
           onChange={(e) => onInputChange(Number(e.target.value))}
+          value={
+            selectedToken.stakingAmount ? selectedToken.stakingAmount : null
+          }
         />
+        <MaxButton onClick={() => onMaxButton()}>Max</MaxButton>
       </InputWrapper>
       <TokenSearchModal
         isOpen={isOpen}

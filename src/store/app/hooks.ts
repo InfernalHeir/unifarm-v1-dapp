@@ -1,87 +1,63 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
-import {
-  setOpenModal,
-  setCloseModal,
-  setApplicationError,
-  setApplicationSuccess,
-  setLoader,
-  setApproveModal
-} from './action'
+import { ModalTypes } from './reducer'
 
-export const useModalChecker = (): boolean => {
-  const state: boolean = useSelector((state: AppState) => {
+import { setOpenModal, setCloseModal, setLoader } from './action'
+
+// this hooks will call internally.
+export const useModalStatus = (whichOne: ModalTypes): boolean => {
+  const openModal: ModalTypes = useSelector((state: AppState) => {
     return state.app.openModal
   })
-  return state
+  return openModal === whichOne
 }
 
-export const useTriggerOpenModal = () => {
+// this hook can ask which modal type you want to open
+export const useSetOpenModal = (whichOne?: ModalTypes) => {
   const dispatch = useDispatch<AppDispatch>()
-
   return useCallback(() => {
     dispatch(
       setOpenModal({
-        openModal: true
+        openModal: whichOne
       })
     )
   }, [dispatch])
 }
 
+// use open the PENDING_TX Modal.
+export const useOpenPendingTxModal = () => {
+  return useSetOpenModal(ModalTypes.PENDING_TX)
+}
+
+// open the wallet
+export const useOpenWalletModal = () => {
+  return useSetOpenModal(ModalTypes.WALLET)
+}
+
+// use to close Modal to close specific wallet
 export const useCloseModal = () => {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(() => {
     dispatch(
       setCloseModal({
-        openModal: false
+        openModal: null
       })
     )
   }, [dispatch])
 }
 
-export const useSetApplicationStatus = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const setAppError = (appError: boolean, message: string | null) => {
-    return dispatch(
-      setApplicationError({
-        appError,
-        message
-      })
-    )
-  }
-  const setAppSuccess = (appSuccess: boolean, success: string) => {
-    return dispatch(
-      setApplicationSuccess({
-        appSuccess,
-        message: success
-      })
-    )
-  }
-
-  const setApploader = (is: boolean) => {
-    return dispatch(
-      setLoader({
-        loading: is
-      })
-    )
-  }
-  return {
-    setAppError,
-    setAppSuccess,
-    setApploader
-  }
-}
-
-export const useAppsStatus = () => {
-  const state = useSelector<AppState>((state) => state.app)
-  return state
-}
-
-export const useSetApporveModal = () => {
+// use to set global loader on screen.
+export const useSetGlobalLoader = () => {
   const dispatch = useDispatch()
-  const setToClose = (isOpen?: boolean) => {
-    return dispatch(setApproveModal({ appRoveModal: isOpen }))
-  }
-  return setToClose
+  return dispatch(
+    setLoader({
+      globalLoader: true
+    })
+  )
+}
+
+// use to Check Global Loader.
+export const useGlobalLoader = () => {
+  return useSelector((state: AppState) => state.app.globalLoader)
 }

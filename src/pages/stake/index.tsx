@@ -9,7 +9,6 @@ import { useSelectedTokens } from '../../store/stake/hooks'
 import { usePoolData } from '../../store/pools/hooks'
 import { AppState } from '../../store'
 import { Connect } from '../../components/Buttons'
-import { useTriggerOpenModal } from '../../store/app/hooks'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@material-ui/core'
 import PoolComponent from '../../components/PoolComponent'
@@ -33,12 +32,6 @@ const Stake = () => {
 
   const state: any = useSelector<AppState>((state) => state.app)
 
-  const open = useTriggerOpenModal()
-
-  const loading = useSelector((state: AppState) => {
-    return state.app.loading
-  })
-
   const poolData: any = useSelector((state: AppState) => {
     return state.poolReducer
   })
@@ -50,27 +43,11 @@ const Stake = () => {
         <NumberInput />
 
         {active ? (
-          <ShowMePools
-            disabled={!active || state.appError || !selectedToken.stakingAmount}
-            isDisable={
-              !active || state.appSuccess || !selectedToken.stakingAmount
-            }
-            onClick={() => getPoolInfo()}
-          >
-            {state.appError ? (
-              state.message
-            ) : (
-              <>
-                {loading ? (
-                  <CircularProgress style={{ width: '24px', color: '#fff' }} />
-                ) : (
-                  <>Show me Available Pools</>
-                )}
-              </>
-            )}
+          <ShowMePools isDisable={false} onClick={() => getPoolInfo()}>
+            Show me Available Pools
           </ShowMePools>
         ) : (
-          <Connect style={{ width: '100%', marginTop: '10px' }} onClick={open}>
+          <Connect style={{ width: '100%', marginTop: '10px' }}>
             Connect
           </Connect>
         )}
