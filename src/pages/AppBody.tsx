@@ -1,30 +1,24 @@
-import React from 'react'
-import UnifarmLogo from '../components/UnifarmLogo'
-import { useWeb3React } from '@web3-react/core'
-import { shortenAddress, getConnectorLogo } from '../utils'
-import { ProviderLogo } from '../components/Web3Modal'
-import { Link } from 'react-router-dom'
-import {
-  AccountDetails,
-  Connect,
-  MyStakesRewards,
-  ButtonGroup
-} from '../components/Buttons'
-//import { useTriggerOpenModal } from "../store/app/hooks";
-import { useOpenWalletModal } from '../store/app/hooks'
+import React from "react";
+import UnifarmLogo from "../components/UnifarmLogo";
+import { useWeb3React } from "@web3-react/core";
+import { shortenAddress, getConnectorLogo } from "../utils";
+import { ProviderLogo } from "../components/Web3Modal";
+import { Link } from "react-router-dom";
+import { AccountDetails, Connect, ButtonGroup } from "../components/Buttons";
+import { useOpenWalletModal } from "../store/app/hooks";
 
 const AppBody = ({
   children,
   logo
 }: {
-  children: React.ReactNode
-  logo?: boolean
+  children: React.ReactNode;
+  logo?: boolean;
 }) => {
-  const { account, active, connector } = useWeb3React()
+  const { account, active, connector } = useWeb3React();
 
-  const setOpenWallet = useOpenWalletModal()
+  const setOpenWallet = useOpenWalletModal();
 
-  const ActiveProviderLogo = getConnectorLogo(connector)
+  const ActiveProviderLogo = getConnectorLogo(connector);
 
   return (
     <section className="form_signup_one home_page_list">
@@ -55,7 +49,7 @@ const AppBody = ({
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default AppBody
+export default AppBody;

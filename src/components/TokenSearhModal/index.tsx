@@ -8,6 +8,8 @@ import { AiOutlineClose } from "react-icons/ai";
 import IconButton from "@material-ui/core/IconButton";
 import { tokenlist } from "../../constants/index";
 import { useSetTokenDetails } from "../../store/stake/hooks";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 
 interface ITokenSearchModal {
   isOpen: boolean;
@@ -46,18 +48,46 @@ const FlexHeader = styled.div`
   justify-content: space-between;
 `;
 
-const TokenSearchModal = ({ isOpen, heading, close }: ITokenSearchModal) => {
-  const { setSelectedTokenDetails } = useSetTokenDetails();
+const useStyles = makeStyles((theme) => ({
+  textfield: {
+    width: "96%",
+    marginLeft: 10
+  },
+  btnStyle: {
+    borderRadius: 20,
+    width: 440,
+    height: 55,
+    justifyContent: "space-between",
+    color: "black",
+    border: "1px solid rgba(0, 0, 0, 0.23)"
+  },
+  dilogTitle: {
+    display: "flex",
+    justifyContent: "space-between"
+  }
+}));
 
+const TokenSearchModal = ({ isOpen, close }: ITokenSearchModal) => {
+  const { setSelectedTokenDetails } = useSetTokenDetails();
+  const classes = useStyles();
   return (
     <Modal isOpen={isOpen} close={close}>
       <FlexHeader>
-        <DiglogHeader>{heading}</DiglogHeader>
+        <DiglogHeader>Select Your Token</DiglogHeader>
         <IconButton onClick={close}>
           <AiOutlineClose />
         </IconButton>
       </FlexHeader>
+
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        placeholder="Search Your Token"
+        className={classes.textfield}
+      />
+
       <Divider />
+
       {tokenlist.tokenMetaData.map((item) => {
         return (
           <List key={item.key}>

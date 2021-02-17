@@ -1,21 +1,21 @@
-import { injected, trustwallet } from "../connectors";
+import { injected, trustwallet, walletlink } from "../connectors";
 
 import { AbstractConnector } from "@web3-react/abstract-connector";
 // connectors logo
 import MetamaskLogo from "../assests/images/connectors/metamask.png";
 import TrustWalletLogo from "../assests/images/connectors/trustWallet.png";
-import CoinbaseConnectLogo from "../assests/images/connectors/coinbaseWalletIcon.svg";
+import CoinbaseWalletLogo from "../assests/images/connectors/coinbasewallet.png";
 
 // Token List Icon can be fetch from there
-import OROIcon from "../assests/images/oro.png";
-import NORD from "../assests/images/nord.png";
-import MATICIcon from "../assests/images/Sidechain/matic.png";
-import CNTRIcon from "../assests/images/Tokens/cntr.png";
-import FrontIcon from "../assests/images/Tokens/frontier.png";
-import ReefIcon from "../assests/images/Tokens/reef.png";
-import TVKIcon from "../assests/images/Tokens/TVK.png";
-import RouteICon from "../assests/images/Tokens/ROUTE.png";
-import ZERO from "../assests/images/Tokens/zeroswap.png";
+import OROIcon from "../assests/images/tokens/oro.png";
+import NORD from "../assests/images/tokens/Nord.png";
+import MATICIcon from "../assests/images/sidechain/matic.png";
+import CNTRIcon from "../assests/images/tokens/cntr.png";
+import FrontIcon from "../assests/images/tokens/frontier.png";
+import ReefIcon from "../assests/images/tokens/reef.png";
+import TVKIcon from "../assests/images/tokens/TVK.png";
+import RouteICon from "../assests/images/tokens/ROUTE.png";
+import ZERO from "../assests/images/tokens/zeroswap.png";
 
 export const ORO = "0xef67699222ee81f6a6dcd0a9ba88c24d783c3b46";
 
@@ -47,6 +47,14 @@ export const WALLETS: IWallet = {
     name: "Trust Wallet",
     connector: trustwallet,
     description: "Using Trust Wallet & Rainbow Wallet",
+    isMobileSupported: true,
+    isMobileSupportOnly: false
+  },
+  COINBASE: {
+    logoUri: CoinbaseWalletLogo,
+    name: "Coinbase Wallet",
+    connector: walletlink,
+    description: "Using Coinbase Wallet",
     isMobileSupported: true,
     isMobileSupportOnly: false
   }

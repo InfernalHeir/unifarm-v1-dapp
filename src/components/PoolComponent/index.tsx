@@ -2,7 +2,7 @@ import { blue } from "@material-ui/core/colors";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useOnChange } from "../../store/stake/hooks";
+import { useStakeActions } from "../../store/stake/hooks";
 //import ApproveModal from '../ApproveModal'
 
 const StyledPoolIcon = styled.img`
@@ -28,7 +28,7 @@ const PoolCard = styled.div`
 `;
 
 const PoolComponent = ({ showRewards }: { showRewards: any }) => {
-  const { onStake, onApprove }: any = useOnChange();
+  const { onV1Stake, onApprove } = useStakeActions();
   const [config, setConfig] = useState<{
     type?: string | null;
     openModal: boolean;

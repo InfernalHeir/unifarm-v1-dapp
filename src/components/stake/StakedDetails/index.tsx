@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import ReefIcon from '../../../assests/images/Tokens/reef.png'
-import CNTR from '../../../assests/images/Tokens/cntr.png'
-import Matic from '../../../assests/images/Tokens/matic.png'
-import OROIcon from '../../../assests/images/Tokens/oro.png'
-import FrontIcon from '../../../assests/images/Tokens/frontier.png'
-import { useWeb3React } from '@web3-react/core'
-import { useUnifarmV2Contract } from '../../../hooks/useTokenContract'
+import React, { useEffect, useState } from "react";
+import ReefIcon from "../../../assests/images/tokens/reef.png";
+import CNTR from "../../../assests/images/tokens/cntr.png";
+import Matic from "../../../assests/images/tokens/matic.png";
+import OROIcon from "../../../assests/images/tokens/oro.png";
+import FrontIcon from "../../../assests/images/tokens/frontier.png";
+import { useWeb3React } from "@web3-react/core";
+import { useUnifarmV2Contract } from "../../../hooks/useTokenContract";
 // this is reusable componnet
-import firebase from '../../../firebaseConfig'
-import { useStakingDataOnLoadOrPropsReceive } from '../../../store/info/hooks'
-import NotConnected from '../../NotConnected'
+import firebase from "../../../firebaseConfig";
+import { useStakingDataOnLoadOrPropsReceive } from "../../../store/info/hooks";
+import NotConnected from "../../NotConnected";
 
 const StakedDetails = () => {
-  const [rewardPunish, setRewardPunish] = useState<boolean>(false)
+  const [rewardPunish, setRewardPunish] = useState<boolean>(false);
 
-  const [stakingDetails, setStakingDetails] = useState<any[] | null>()
+  const [stakingDetails, setStakingDetails] = useState<any[] | null>();
 
-  const { active, library, account } = useWeb3React()
+  const { active, library, account } = useWeb3React();
 
   const [config, setConfig] = useState<{
-    isLoading: boolean
-    error: string | null
-  }>()
+    isLoading: boolean;
+    error: string | null;
+  }>();
 
-  useStakingDataOnLoadOrPropsReceive()
+  useStakingDataOnLoadOrPropsReceive();
 
   const RenderingLoaderWhenPageFetchData = () => {
     if (!active || !account) {
-      return <NotConnected />
+      return <NotConnected />;
     } else {
       return (
         <div className="row">
@@ -200,11 +200,11 @@ const StakedDetails = () => {
             </div>
           </div>
         </div>
-      )
+      );
     }
-  }
+  };
 
-  return <RenderingLoaderWhenPageFetchData />
-}
+  return <RenderingLoaderWhenPageFetchData />;
+};
 
-export default StakedDetails
+export default StakedDetails;

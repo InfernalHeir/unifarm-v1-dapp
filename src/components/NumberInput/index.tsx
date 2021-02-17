@@ -1,10 +1,10 @@
-import React, { Fragment, useCallback, useState } from 'react'
-import styled from 'styled-components'
-import { IoIosArrowDown } from 'react-icons/io'
-import TokenSearchModal from '../TokenSearhModal'
-import { useSelectedTokens, useOnChange } from '../../store/stake/hooks'
-import { TokenLogo } from '../../pages/calculator'
-import { useWeb3React } from '@web3-react/core'
+import React, { Fragment, useCallback, useState } from "react";
+import styled from "styled-components";
+import { IoIosArrowDown } from "react-icons/io";
+import TokenSearchModal from "../TokenSearhModal";
+import { useStakeActions, useDerivedStakeInfo } from "../../store/stake/hooks";
+import { TokenLogo } from "../../pages/calculator";
+import { useWeb3React } from "@web3-react/core";
 
 const InputWrapper = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ const InputWrapper = styled.div`
   border: 1px solid #2222227a;
   padding: 0.5rem;
   position: relative;
-`
+`;
 
 const Input = styled.input`
 text-transform: capitalize;
@@ -31,7 +31,7 @@ padding: 0px;
 -webkit-appearance: textfield;
 appearance: textfield;
 }
-`
+`;
 
 const Select = styled.button`
 padding: 6px;
@@ -43,7 +43,7 @@ font-size: 16px;
 display: flex;
 align-items:center;
 }
-`
+`;
 const MaxButton = styled.button`
   background: #197bc2;
   color: white;
@@ -52,25 +52,26 @@ const MaxButton = styled.button`
   position: absolute;
   right: 15px;
   top: 15px;
-`
+`;
 
 const NumberInput = () => {
-  const [isOpen, setOpen] = useState<boolean>(false)
+  const [isOpen, setOpen] = useState<boolean>(false);
 
-  const [reset, setReset] = useState<{ boolean }>()
+  const [reset, setReset] = useState<{ boolean }>();
 
-  const selectedToken = useSelectedTokens()
+  const selectedToken = useDerivedStakeInfo();
 
-  const { onInputChange, onMaxButton }: any = useOnChange()
+  const { onInputChange, onMaxButton } = useStakeActions();
+
   const open = useCallback(() => {
-    setOpen(true)
-  }, [isOpen])
+    setOpen(true);
+  }, [isOpen]);
 
   const close = useCallback(() => {
-    setOpen(false)
-  }, [isOpen])
+    setOpen(false);
+  }, [isOpen]);
 
-  const { active } = useWeb3React()
+  const { active } = useWeb3React();
 
   return (
     <Fragment>
@@ -106,7 +107,7 @@ const NumberInput = () => {
         heading="Select Relay Chain"
       />
     </Fragment>
-  )
-}
+  );
+};
 
-export default NumberInput
+export default NumberInput;

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import AppBody from '../AppBody'
-import styled from 'styled-components'
-import { Typography } from '../../components/Typo'
-import TokenSearchModal from '../../components/TokenSearhModal'
-import { IoIosArrowDropdown } from 'react-icons/io'
-import { ShowMePools } from '../../components/Buttons'
-import { useWeb3React } from '@web3-react/core'
-import CalculatorRewards from '../../components/CalculotorRewards'
-import { useOnChange, useSelectedTokens } from '../../store/stake/hooks'
+import React, { useState, useEffect } from "react";
+import AppBody from "../AppBody";
+import styled from "styled-components";
+import { Typography } from "../../components/Typo";
+import TokenSearchModal from "../../components/TokenSearhModal";
+import { IoIosArrowDropdown } from "react-icons/io";
+import { ShowMePools } from "../../components/Buttons";
+import { useWeb3React } from "@web3-react/core";
+import CalculatorRewards from "../../components/CalculotorRewards";
+import { useStakeActions, useDerivedStakeInfo } from "../../store/stake/hooks";
 
 const CalculatorWrapper = styled.div`
   max-width: 550px;
@@ -15,7 +15,7 @@ const CalculatorWrapper = styled.div`
   padding: 0.25rem;
   margin: auto;
   border-radius: 12px;
-`
+`;
 
 const TokenSelector = styled.button`
   width: 100%;
@@ -36,46 +36,46 @@ const TokenSelector = styled.button`
     right: 10px;
     font-size: 18px;
   }
-`
+`;
 
 const StyledInput = styled.input<{ isDisable: boolean }>`
   width: 100%;
   margin-top: 10px;
   border: 1px solid #2222224a;
-  color: ${(props) => (props.isDisable ? '#dedede' : '#222')};
+  color: ${(props) => (props.isDisable ? "#dedede" : "#222")};
   max-width: 350px;
   padding: 1rem;
   border-radius: 10px;
   margin: auto;
   display: block;
   margin-top: 10px;
-  cursor: ${(props) => (props.isDisable ? 'not-allowed' : 'allowed')};
-`
+  cursor: ${(props) => (props.isDisable ? "not-allowed" : "allowed")};
+`;
 
 export const TokenLogo = styled.img`
   width: 25px;
   margin-right: 20px;
-`
+`;
 
 const Calculator = () => {
-  const [isOpen, setOpen] = useState<boolean>(false)
+  const [isOpen, setOpen] = useState<boolean>(false);
 
-  const [showCalculotor, setShowCalculotor] = useState<boolean>(false)
+  const [showCalculotor, setShowCalculotor] = useState<boolean>(false);
 
-  const selectedCurrency: any = useSelectedTokens()
+  const selectedCurrency = useDerivedStakeInfo();
 
-  const { onInputChange } = useOnChange()
+  const { onInputChange } = useStakeActions();
 
-  const { active, account } = useWeb3React()
+  const { active, account } = useWeb3React();
 
   const close = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <AppBody logo={true}>
       <CalculatorWrapper>
-        <Typography style={{ marginTop: '20px', marginBottom: '20px' }}>
+        <Typography style={{ marginTop: "20px", marginBottom: "20px" }}>
           Calculate Your Earnings
         </Typography>
         <TokenSelector onClick={() => setOpen(true)}>
@@ -89,8 +89,8 @@ const Calculator = () => {
             </>
           ) : (
             <>Select Token</>
-          )}{' '}
-          <IoIosArrowDropdown className="arrow" />{' '}
+          )}{" "}
+          <IoIosArrowDropdown className="arrow" />{" "}
         </TokenSelector>
         <StyledInput
           placeholder="No of Tokens to Stake"
@@ -110,7 +110,7 @@ const Calculator = () => {
 
       <TokenSearchModal heading="Select Tokens" isOpen={isOpen} close={close} />
     </AppBody>
-  )
-}
+  );
+};
 
-export default Calculator
+export default Calculator;

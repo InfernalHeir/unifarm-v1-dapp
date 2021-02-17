@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import one from "../../assests/images/Tokens/oro.png";
-import two from "../../assests/images/Tokens/Nord.png";
-import three from "../../assests/images/Tokens/ROUTE.png";
-import four from "../../assests/images/Tokens/TVK.png";
+import one from "../../assests/images/tokens/oro.png";
+import two from "../../assests/images/tokens/Nord.png";
+import three from "../../assests/images/tokens/ROUTE.png";
+import four from "../../assests/images/tokens/TVK.png";
 import Tooltip from "@material-ui/core/Tooltip";
 import Avatar from "@material-ui/core/Avatar";
 

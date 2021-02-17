@@ -1,15 +1,9 @@
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
 
-export const Connect = styled.button`
-  border-radius: 6px;
-  background: #4bb543;
-  padding: 10px;
+export const Connect = styled(Button)`
+  border-radius: 20px;
   font-weight: 800;
-  color: white;
-  border: 0;
-  &: focus {
-    background: #4bb543;
-  }
 `;
 
 export const ShowMePools = styled.button<{ isDisable?: boolean }>`

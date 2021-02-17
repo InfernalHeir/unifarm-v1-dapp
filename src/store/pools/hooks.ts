@@ -3,7 +3,7 @@ import {
   useUnifarmV1Contract,
   useUnifarmV2Contract
 } from "../../hooks/useTokenContract";
-import { useSelectedTokens } from "../stake/hooks";
+import { useDerivedStakeInfo } from "../stake/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setDailyRewardsDistrubution, setReset } from "../pools/action";
 import { useWeb3React } from "@web3-react/core";
@@ -30,7 +30,7 @@ export const usePoolData = () => {
   // unifarm contract instance.
   const unifarmV1 = useUnifarmV1Contract();
   const unifarmV2 = useUnifarmV2Contract();
-  const selectedTokens = useSelectedTokens();
+  const selectedTokens = useDerivedStakeInfo();
   const { library } = useWeb3React();
   const dispatch = useDispatch();
 

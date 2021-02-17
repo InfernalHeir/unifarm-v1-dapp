@@ -5,7 +5,7 @@ import NumberInput from "../../components/NumberInput";
 import { useWeb3React } from "@web3-react/core";
 import { Typography } from "../../components/Typo";
 import styled from "styled-components";
-import { useSelectedTokens } from "../../store/stake/hooks";
+import { useDerivedStakeInfo } from "../../store/stake/hooks";
 import { usePoolData } from "../../store/pools/hooks";
 import { AppState } from "../../store";
 import { Connect } from "../../components/Buttons";
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 const Stake = () => {
   const { active } = useWeb3React();
 
-  const selectedToken = useSelectedTokens();
+  const selectedToken = useDerivedStakeInfo();
   const isFull = useResetData();
 
   const getPoolInfo = usePoolData();
